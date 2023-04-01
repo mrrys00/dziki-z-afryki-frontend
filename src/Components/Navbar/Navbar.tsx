@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Container, Nav, Navbar } from 'react-bootstrap'
 
-import { type DecodedUser } from '../../Types/Types'
-
 import { useAuth } from '../Auth/AuthProvider'
 import { ROLE_STUDENT, ROLE_TEACHER } from '../../Constants/Auth.d'
 import { ROUTE_AUTHENTICATION, ROUTE_HOME, ROUTE_REGISTER } from '../../Constants/Routes.d'
