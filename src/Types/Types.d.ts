@@ -9,7 +9,7 @@ export interface UserInputRegister {
 }
 
 export interface UserInputAuthentication {
-    username: string
+    email: string
     password: string
 }
 

@@ -12,12 +12,12 @@ const AuthenticationPage: React.FC = () => {
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
     const [input, setInput] = useState<UserInputAuthentication>(() => ({
-        username: '',
+        email: '',
         password: ''
     }))
 
     // const [inputValidator, setInputValidator] = useState<Record<string, boolean>>(() => ({
-    //     username: true,
+    //     email: true,
     //     password: true
     // }))
 
@@ -28,15 +28,13 @@ const AuthenticationPage: React.FC = () => {
     const state = location.state as { from: Location }
     const from = state ? state.from.pathname : '/'
 
-    async function loginUser (): Promise<any> {
-        return await axios({
-            url: PATH_AUTH_AUTHENTICATION,
-            method: 'post',
-            data: input
-        }).catch(error => {
-            return error
-        })
-    }
+    const loginUser = async () => await axios({
+        url: PATH_AUTH_AUTHENTICATION,
+        method: 'post',
+        data: input
+    }).catch(error => {
+        return error
+    })
 
     async function handleSubmit (): Promise<void> {
         // const validator = {
@@ -66,17 +64,17 @@ const AuthenticationPage: React.FC = () => {
                 <Form>
                     <Row className="mb-3">
                         <Form.Group as={Col} md="6" controlId="validationCustom03">
-                            <Form.Label>Username</Form.Label>
+                            <Form.Label>Email</Form.Label>
                             <Form.Control
                                 type="text"
-                                placeholder="Username"
+                                placeholder="Password"
                                 required
-                                value={input.username}
+                                value={input.email}
                                 // isInvalid={!inputValidator.username}
-                                onChange={(val) => { setInput((s) => ({ ...s, username: val.target.value })) }}
+                                onChange={(val) => { setInput((s) => ({ ...s, email: val.target.value })) }}
                             />
                             <Form.Control.Feedback type="invalid">
-                                Please provide a valid username.
+                                Please provide a valid email.
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group as={Col} md="6" controlId="validationCustom04">
