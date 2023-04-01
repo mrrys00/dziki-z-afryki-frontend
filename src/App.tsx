@@ -7,10 +7,13 @@ import {
     Navigate
 } from 'react-router-dom'
 
+import { NavbarComponent } from './Components/Navbar/Navbar'
+import Home from './Components/Home/Home'
+
 import { AuthenticationPage } from './Components/Authentication/Authentication'
 import { RegisterPage } from './Components/Register/Register'
 import { RequireNotAuth } from './Components/Auth/RequireNotAuth'
-import Home from './Components/Home/Home'
+import NotFound from './Components/NotFound/NotFound'
 
 import axios from 'axios'
 import { ROUTE_AUTHENTICATION, ROUTE_HOME, ROUTE_REGISTER } from './Constants/Routes.d'
@@ -19,6 +22,7 @@ axios.defaults.baseURL = 'http://localhost:8080/'
 const App: React.FC = () => {
     return (
         <div className="App">
+            <NavbarComponent />
             <Routes>
                 <Route path="/" element={<Navigate to={ROUTE_AUTHENTICATION} replace={true} />}>
                 </Route>
@@ -32,7 +36,7 @@ const App: React.FC = () => {
                 </Route>
 
                 {/* TO DO NotFound */}
-                {/* <Route path="*" element={<NotFound />} /> */}
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </div>
     )

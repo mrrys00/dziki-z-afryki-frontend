@@ -1,0 +1,9 @@
+.NotFound-Container {
+    top: 15vh;
+    color:#FFFFFF;
+    margin: auto;
+    position: relative;
+    width: 100%;
+    background-color: rgba(225, 225, 225, 0.5);
+    border-radius: 5px;
+}
