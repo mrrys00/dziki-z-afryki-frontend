@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { Component, useState } from 'react'
+import React, { useState } from 'react'
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../Auth/AuthProvider'
@@ -47,7 +47,7 @@ const AuthenticationPage: React.FC = () => {
         const resp = await loginUser()
 
         if (resp.status === 200) {
-            auth.signin(resp.data.token, () => {
+            auth.signin(resp.data.jwt, () => {
                 navigate(from, { replace: true })
             })
         } else {

@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react'
+import React from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { ROLE_STUDENT } from '../../Constants/Auth.d'
 import { ROUTE_AUTHENTICATION } from '../../Constants/Routes.d'

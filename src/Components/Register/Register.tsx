@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, Col, Form, InputGroup, Row, Container, Alert } from 'react-bootstrap'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
@@ -59,7 +59,7 @@ export const RegisterPage = (): JSX.Element => {
         const resp = await registerUser()
 
         if (resp.status === 201) {
-            auth.signin(resp.data.token, () => {
+            auth.signin(resp.data.jwt, () => {
                 navigate(from, { replace: true })
             })
         } else {

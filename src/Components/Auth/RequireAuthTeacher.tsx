@@ -1,11 +1,11 @@
-import React, { Component, useEffect } from 'react'
+import React from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { ROLE_TEACHER } from '../../Constants/Auth.d'
 import { ROUTE_AUTHENTICATION } from '../../Constants/Routes.d'
 import { useAuth } from './AuthProvider'
 import Loading from './Loading'
 
-export const RequireAuthTeacher = (): JSX.Element | React.FC | React.ReactElement => {
+export const RequireAuthTeacher = (): JSX.Element => {
     const auth = useAuth()
     const location = useLocation()
 

@@ -6,7 +6,7 @@ import { JWT } from '../../Constants/Auth.d'
 
 interface AuthContextType {
     user: DecodedUser | null
-    signin: (token: string, callback?: VoidFunction) => void
+    signin: (jwt: string, callback?: VoidFunction) => void
     signout: (callback?: VoidFunction) => void
     isLoaded: boolean
 }
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }): JSX.E
 
     const signout = (callback?: VoidFunction): void => {
         delete axios.defaults.headers.common.Authorization
-        localStorage.removeItem('token')
+        localStorage.removeItem(JWT)
         setUser(null)
         setIsLoaded(true)
         if (callback != null) callback()
@@ -36,9 +36,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }): JSX.E
 
     useEffect(() => {
         function checkToken (): void {
-            const token = localStorage.getItem('token')
-            if (token !== null) {
-                signin(token)
+            const jwt = localStorage.getItem(JWT)
+            if (jwt !== null) {
+                signin(jwt)
             }
         }
 
