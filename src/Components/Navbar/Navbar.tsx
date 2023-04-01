@@ -14,17 +14,11 @@ export const NavbarComponent = (): JSX.Element => {
     const state = location.state as { from: Location }
     const from = state != null ? state.from.pathname : ROUTE_HOME
 
-    // console.log(`user role: ${auth.user?.role}`)
     return (
         <Navbar style={{ position: 'sticky', top: 0, zIndex: 10 }}
             bg="light" variant="light" fixed="top">
             <Container>
                 <Navbar.Brand as={Link} to="/">SYSTEM</Navbar.Brand>
-                {/* {auth.user === null &&
-                    <Nav className="me-auto">
-                        <Nav.Link as={Link} to={ROUTE_AUTHENTICATION}>Login</Nav.Link>
-                        <Nav.Link as={Link} to={ROUTE_REGISTER}>Register</Nav.Link>
-                    </Nav>} */}
 
                 {auth.user?.role.includes(ROLE_STUDENT) &&
                     <Nav className="me-auto">

@@ -16,11 +16,6 @@ const AuthenticationPage: React.FC = () => {
         password: ''
     }))
 
-    // const [inputValidator, setInputValidator] = useState<Record<string, boolean>>(() => ({
-    //     email: true,
-    //     password: true
-    // }))
-
     const navigate = useNavigate()
     const location = useLocation()
     const auth = useAuth()
@@ -39,13 +34,6 @@ const AuthenticationPage: React.FC = () => {
     }
 
     const handleSubmit = async (): Promise<void> => {
-        // const validator = {
-        //     username: nameValidator(input.username),
-        //     password: passwordValidator(input.password)
-        // }
-
-        // setInputValidator(validator)
-        // if (!Object.values(validator).includes(false)) {
         const resp = await loginUser()
 
         if (resp.status === 200) {
@@ -55,10 +43,8 @@ const AuthenticationPage: React.FC = () => {
         } else {
             setShowAlert(true)
             setAlertMess(resp.response.data)
-            // console.log(`resp${resp.response.data}`)
         }
 
-        // }
     }
 
     const clickSubmit = (): void => {
@@ -82,9 +68,9 @@ const AuthenticationPage: React.FC = () => {
                                     setInput((s) => ({ ...s, email: val.target.value }))
                                 }}
                             />
-                            <Form.Control.Feedback type="invalid">
+                            {/* <Form.Control.Feedback type="invalid">
                                 Please provide a valid email.
-                            </Form.Control.Feedback>
+                            </Form.Control.Feedback> */}
                         </Form.Group>
                         <Form.Group as={Col} md="6" controlId="validationCustom04">
                             <Form.Label>Password</Form.Label>
@@ -97,9 +83,9 @@ const AuthenticationPage: React.FC = () => {
                                 onChange={(val) => {
                                     setInput((s) => ({ ...s, password: val.target.value }))
                                 }}/>
-                            <Form.Control.Feedback type="invalid">
+                            {/* <Form.Control.Feedback type="invalid">
                                 Please provide a valid password.
-                            </Form.Control.Feedback>
+                            </Form.Control.Feedback> */}
                         </Form.Group>
                     </Row>
                     <Button variant="success" onClick={clickSubmit}>Authentication</Button>

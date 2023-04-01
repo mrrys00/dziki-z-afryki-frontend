@@ -28,7 +28,6 @@ const App: React.FC = () => {
                 <Route path="/" element={<Navigate to={ROUTE_AUTHENTICATION} replace={true} />}>
                 </Route>
 
-                {/* TO DO Home */}
                 <Route path={ROUTE_HOME} element={<Home />} />
 
                 <Route element={<RequireNotAuth />}>
@@ -36,7 +35,6 @@ const App: React.FC = () => {
                     <Route path={ROUTE_REGISTER} element={<RegisterPage />} />
                 </Route>
 
-                {/* TO DO NotFound */}
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </div>

@@ -23,14 +23,6 @@ export const RegisterPage = (): JSX.Element => {
         indexNumber: 0
     }))
 
-    // const [inputValidator, setInputValidator] = useState<Record<string, boolean>>(() => ({
-    //     firstName: true,
-    //     lastName: true,
-    //     email: true,
-    //     username: true,
-    //     password: true
-    // }))
-
     const navigate = useNavigate()
     const location = useLocation()
     const auth = useAuth()
@@ -49,15 +41,6 @@ export const RegisterPage = (): JSX.Element => {
     }
 
     async function handleSubmit (): Promise<void> {
-        // const validator = {
-        //     firstName: nameValidator(input.firstName),
-        //     lastName: nameValidator(input.lastName),
-        //     email: emailValidator(input.email),
-        //     username: nameValidator(input.username),
-        //     password: passwordValidator(input.password)
-        // }
-        // setInputValidator(validator)
-        // if (!Object.values(validator).includes(false)) {
         const resp = await registerUser()
 
         if (resp.status === 201) {
@@ -67,9 +50,7 @@ export const RegisterPage = (): JSX.Element => {
         } else {
             setShowAlert(true)
             setAlertMess(resp.response.data)
-            // console.log(`resp${resp.response.data}`)
         }
-        // }
     }
 
     const clickSubmit = (): void => {
