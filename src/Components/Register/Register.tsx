@@ -36,15 +36,17 @@ export const RegisterPage = (): JSX.Element => {
     const auth = useAuth()
 
     const state = location.state as { from: Location }
-    const from = state ? state.from.pathname : '/'
+    const from = state != null ? state.from.pathname : '/'
 
-    const registerUser = async () => await axios({
-        url: PATH_AUTH_REGISTER,
-        method: 'post',
-        data: input
-    }).catch(error => {
-        return error
-    })
+    async function registerUser (): Promise<any> {
+        return await axios({
+            url: PATH_AUTH_REGISTER,
+            method: 'post',
+            data: input
+        }).catch(error => {
+            return error
+        })
+    }
 
     async function handleSubmit (): Promise<void> {
         // const validator = {
@@ -70,6 +72,10 @@ export const RegisterPage = (): JSX.Element => {
         // }
     }
 
+    const clickSubmit = (): void => {
+        const _ = handleSubmit
+    }
+
     if (auth.user === null) {
         return (
             <Container className="Register">
@@ -81,10 +87,14 @@ export const RegisterPage = (): JSX.Element => {
                                 required
                                 value={input.firstName}
                                 // isInvalid={!inputValidator.firstName}
-                                onChange={(val) => { setInput((s) => ({ ...s, firstName: val.target.value })) } }
+                                onChange={(val) => {
+                                    setInput((s) => ({ ...s, firstName: val.target.value }))
+                                } }
                                 type="text"
                                 placeholder="First name" />
-                            <Form.Control.Feedback type="invalid">Provide a valid firstname!</Form.Control.Feedback>
+                            {/* <Form.Control.Feedback type="invalid">
+                                Provide a valid firstname!
+                            </Form.Control.Feedback> */}
                         </Form.Group>
                         <Form.Group as={Col} md="4" controlId="validationCustom02">
                             <Form.Label>Last name</Form.Label>
@@ -92,10 +102,14 @@ export const RegisterPage = (): JSX.Element => {
                                 required
                                 value={input.lastName}
                                 // isInvalid={!inputValidator.lastName}
-                                onChange={(val) => { setInput((s) => ({ ...s, lastName: val.target.value })) } }
+                                onChange={(val) => {
+                                    setInput((s) => ({ ...s, lastName: val.target.value }))
+                                } }
                                 type="text"
                                 placeholder="Last name" />
-                            <Form.Control.Feedback type="invalid">Provide a valid lastname!</Form.Control.Feedback>
+                            {/* <Form.Control.Feedback type="invalid">
+                                Provide a valid lastname!
+                            </Form.Control.Feedback> */}
                         </Form.Group>
                         <Form.Group as={Col} md="4" controlId="validationCustomUsername">
                             <Form.Label>Index number</Form.Label>
@@ -107,10 +121,12 @@ export const RegisterPage = (): JSX.Element => {
                                     required
                                     value={input.indexNumber}
                                     // isInvalid={!inputValidator.indexNumber}
-                                    onChange={(val) => { setInput((s) => ({ ...s, indexNumber: val.target.value })) } } />
-                                <Form.Control.Feedback type="invalid">
+                                    onChange={(val) => {
+                                        setInput((s) => ({ ...s, indexNumber: val.target.value }))
+                                    } } />
+                                {/* <Form.Control.Feedback type="invalid">
                                     Please choose a index number.
-                                </Form.Control.Feedback>
+                                </Form.Control.Feedback> */}
                             </InputGroup>
                         </Form.Group>
                     </Row>
@@ -123,10 +139,12 @@ export const RegisterPage = (): JSX.Element => {
                                 required
                                 value={input.email}
                                 // isInvalid={!inputValidator.email}
-                                onChange={(val) => { setInput((s) => ({ ...s, email: val.target.value })) } } />
-                            <Form.Control.Feedback type="invalid">
+                                onChange={(val) => {
+                                    setInput((s) => ({ ...s, email: val.target.value }))
+                                } } />
+                            {/* <Form.Control.Feedback type="invalid">
                                 Please provide a valid email.
-                            </Form.Control.Feedback>
+                            </Form.Control.Feedback> */}
                         </Form.Group>
                         <Form.Group as={Col} md="6" controlId="validationCustom04">
                             <Form.Label>Password</Form.Label>
@@ -136,13 +154,15 @@ export const RegisterPage = (): JSX.Element => {
                                 required
                                 value={input.password}
                                 // isInvalid={!inputValidator.password}
-                                onChange={(val) => { setInput((s) => ({ ...s, password: val.target.value })) } } />
-                            <Form.Control.Feedback type="invalid">
+                                onChange={(val) => {
+                                    setInput((s) => ({ ...s, password: val.target.value }))
+                                } } />
+                            {/* <Form.Control.Feedback type="invalid">
                                 Please provide a valid password.
-                            </Form.Control.Feedback>
+                            </Form.Control.Feedback> */}
                         </Form.Group>
                     </Row>
-                    <Button variant="success" onClick={handleSubmit}>Register</Button>
+                    <Button variant="success" onClick={clickSubmit}>Register</Button>
                 </Form>
 
                 <Alert show={showAlert} variant="danger">

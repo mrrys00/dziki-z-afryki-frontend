@@ -13,7 +13,7 @@ export const RequireAuthTeacher = (): JSX.Element => {
         return <Loading />
     }
 
-    if (!(auth.user?.role.includes(ROLE_TEACHER))) {
+    if (auth.user?.role.includes(ROLE_TEACHER)) {
         auth.signout()
         return <Navigate to={ ROUTE_AUTHENTICATION } state={{ from: location }} />
     }

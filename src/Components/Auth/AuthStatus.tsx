@@ -1,5 +1,6 @@
 // import { useNavigate } from "react-router-dom"
-import { useAuth } from "./AuthProvider"
+import React, { Component } from 'react'
+import { useAuth } from './AuthProvider'
 
 export const AuthStatus: React.FC = () => {
     const auth = useAuth()

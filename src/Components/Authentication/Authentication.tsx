@@ -26,17 +26,19 @@ const AuthenticationPage: React.FC = () => {
     const auth = useAuth()
 
     const state = location.state as { from: Location }
-    const from = state ? state.from.pathname : '/'
+    const from = state != null ? state.from.pathname : '/'
 
-    const loginUser = async () => await axios({
-        url: PATH_AUTH_AUTHENTICATION,
-        method: 'post',
-        data: input
-    }).catch(error => {
-        return error
-    })
+    async function loginUser (): Promise<any> {
+        return await axios({
+            url: PATH_AUTH_AUTHENTICATION,
+            method: 'post',
+            data: input
+        }).catch(error => {
+            return error
+        })
+    }
 
-    async function handleSubmit (): Promise<void> {
+    const handleSubmit = async (): Promise<void> => {
         // const validator = {
         //     username: nameValidator(input.username),
         //     password: passwordValidator(input.password)
@@ -53,9 +55,14 @@ const AuthenticationPage: React.FC = () => {
         } else {
             setShowAlert(true)
             setAlertMess(resp.response.data)
-            console.log(`resp${resp.response.data}`)
+            // console.log(`resp${resp.response.data}`)
         }
+
         // }
+    }
+
+    const clickSubmit = (): void => {
+        const _ = handleSubmit
     }
 
     if (auth.user === null) {
@@ -67,11 +74,13 @@ const AuthenticationPage: React.FC = () => {
                             <Form.Label>Email</Form.Label>
                             <Form.Control
                                 type="text"
-                                placeholder="Password"
+                                placeholder="Email"
                                 required
                                 value={input.email}
                                 // isInvalid={!inputValidator.username}
-                                onChange={(val) => { setInput((s) => ({ ...s, email: val.target.value })) }}
+                                onChange={(val) => {
+                                    setInput((s) => ({ ...s, email: val.target.value }))
+                                }}
                             />
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid email.
@@ -85,13 +94,15 @@ const AuthenticationPage: React.FC = () => {
                                 required
                                 value={input.password}
                                 // isInvalid={!inputValidator.password}
-                                onChange={(val) => { setInput((s) => ({ ...s, password: val.target.value })) }}/>
+                                onChange={(val) => {
+                                    setInput((s) => ({ ...s, password: val.target.value }))
+                                }}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid password.
                             </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
-                    <Button variant="success" onClick={handleSubmit}>Authentication</Button>
+                    <Button variant="success" onClick={clickSubmit}>Authentication</Button>
                 </Form>
 
                 <Alert show={showAlert} variant="danger">
