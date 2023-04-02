@@ -7,6 +7,7 @@ import { type UserInputAuthentication } from '../../Types/Types'
 
 import './Authentication.css'
 import { PATH_AUTH_AUTHENTICATION } from '../../Constants/Paths.d'
+import { ROUTE_HOME } from '../../Constants/Routes.d'
 
 const AuthenticationPage: React.FC = () => {
     const [showAlert, setShowAlert] = useState(false)
@@ -38,17 +39,12 @@ const AuthenticationPage: React.FC = () => {
 
         if (resp.status === 200) {
             auth.signin(resp.data.jwt, () => {
-                navigate(from, { replace: true })
+                navigate(ROUTE_HOME, { replace: true })
             })
         } else {
             setShowAlert(true)
             setAlertMess(resp.response.data)
         }
-
-    }
-
-    const clickSubmit = (): void => {
-        const _ = handleSubmit
     }
 
     if (auth.user === null) {
@@ -88,7 +84,7 @@ const AuthenticationPage: React.FC = () => {
                             </Form.Control.Feedback> */}
                         </Form.Group>
                     </Row>
-                    <Button variant="success" onClick={clickSubmit}>Authentication</Button>
+                    <Button variant="success" onClick={handleSubmit}>Authentication</Button>
                 </Form>
 
                 <Alert show={showAlert} variant="danger">

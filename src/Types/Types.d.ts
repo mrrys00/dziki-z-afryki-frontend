@@ -5,7 +5,8 @@ export interface UserInputRegister {
     lastName: string
     email: string
     password: string
-    indexNumber: int
+    role: ROLES
+    indexNumber: int | null
 }
 
 export interface UserInputAuthentication {

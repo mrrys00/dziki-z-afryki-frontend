@@ -20,12 +20,12 @@ export const NavbarComponent = (): JSX.Element => {
             <Container>
                 <Navbar.Brand as={Link} to="/">SYSTEM</Navbar.Brand>
 
-                {auth.user?.role.includes(ROLE_STUDENT) &&
+                {auth.user?.role === ROLE_STUDENT &&
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to={ROUTE_HOME}>Home</Nav.Link>
                     </Nav>}
 
-                {auth.user?.role.includes(ROLE_TEACHER) &&
+                {auth.user?.role === ROLE_TEACHER &&
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to={ROUTE_HOME}>Home</Nav.Link>
                     </Nav>}
@@ -36,7 +36,7 @@ export const NavbarComponent = (): JSX.Element => {
                         <Nav.Link as={Link} to={ROUTE_REGISTER}>Register</Nav.Link>
                     </Nav>}
 
-                {auth.user?.role.includes(ROLE_STUDENT) &&
+                {auth.user?.role === ROLE_STUDENT &&
                     <Nav>
                         <Nav.Link disabled={true}>Welcome {auth.user?.email}!</Nav.Link>
                         <Nav.Link onClick={() => {
@@ -46,7 +46,7 @@ export const NavbarComponent = (): JSX.Element => {
                         </Nav.Link>
                     </Nav>}
 
-                {(auth.user?.role.includes(ROLE_TEACHER)) &&
+                {auth.user?.role === ROLE_TEACHER &&
                     <Nav>
                         <Nav.Link disabled={true}>Welcome {auth.user.email}!</Nav.Link>
                         <Nav.Link onClick={() => {
