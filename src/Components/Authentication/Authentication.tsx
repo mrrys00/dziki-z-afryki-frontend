@@ -9,7 +9,7 @@ import './Authentication.css'
 import { PATH_AUTH_AUTHENTICATION } from '../../Constants/Paths.d'
 import { ROUTE_HOME } from '../../Constants/Routes.d'
 
-const AuthenticationPage: React.FC = () => {
+export const AuthenticationPage: React.FC = () => {
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
     const [input, setInput] = useState<UserInputAuthentication>(() => ({
@@ -22,7 +22,7 @@ const AuthenticationPage: React.FC = () => {
     const auth = useAuth()
 
     const state = location.state as { from: Location }
-    const from = state != null ? state.from.pathname : '/'
+    const from = state != null ? state.from.pathname : ROUTE_HOME
 
     async function loginUser (): Promise<any> {
         return await axios({
@@ -39,7 +39,7 @@ const AuthenticationPage: React.FC = () => {
 
         if (resp.status === 200) {
             auth.signin(resp.data.jwt, () => {
-                navigate(ROUTE_HOME, { replace: true })
+                navigate(from, { replace: true })
             })
         } else {
             setShowAlert(true)
@@ -102,5 +102,3 @@ const AuthenticationPage: React.FC = () => {
         </Container>
     )
 }
-
-export { AuthenticationPage }

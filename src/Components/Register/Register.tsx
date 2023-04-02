@@ -10,7 +10,7 @@ import { type UserInputRegister } from '../../Types/Types'
 import { PATH_AUTH_REGISTER } from '../../Constants/Paths.d'
 
 import './Register.css'
-import { ROLE_TEACHER } from '../../Constants/Auth.d'
+import { ROLE_STUDENT, ROLE_TEACHER } from '../../Constants/Auth.d'
 import { ROUTE_HOME } from '../../Constants/Routes.d'
 
 export const RegisterPage = (): JSX.Element => {
@@ -22,7 +22,7 @@ export const RegisterPage = (): JSX.Element => {
         lastName: '',
         email: '',
         password: '',
-        role: '',
+        role: ROLE_STUDENT,
         indexNumber: 0
     }))
 
@@ -31,7 +31,7 @@ export const RegisterPage = (): JSX.Element => {
     const auth = useAuth()
 
     const state = location.state as { from: Location }
-    const from = state != null ? state.from.pathname : '/'
+    const from = state != null ? state.from.pathname : ROUTE_HOME
 
     async function registerUser (): Promise<any> {
         console.log(input)
@@ -51,7 +51,7 @@ export const RegisterPage = (): JSX.Element => {
 
         if (resp.status === 200) {
             auth.signin(resp.data.jwt, () => {
-                navigate(ROUTE_HOME, { replace: true })
+                navigate(from, { replace: true })
             })
         } else {
             setShowAlert(true)
