@@ -40,7 +40,8 @@ export const NavbarComponent = (): JSX.Element => {
                     <Nav>
                         <Nav.Link disabled={true}>Welcome {auth.user?.email}!</Nav.Link>
                         <Nav.Link onClick={() => {
-                            auth.signout(() => { navigate(from, { replace: true }) })
+                            auth.signout(
+                                () => { navigate(ROUTE_AUTHENTICATION, { replace: true }) })
                         } }>
                             Sign out
                         </Nav.Link>
@@ -50,7 +51,8 @@ export const NavbarComponent = (): JSX.Element => {
                     <Nav>
                         <Nav.Link disabled={true}>Welcome {auth.user.email}!</Nav.Link>
                         <Nav.Link onClick={() => {
-                            auth.signout(() => { navigate(from, { replace: true }) })
+                            auth.signout(
+                                () => { navigate(ROUTE_AUTHENTICATION, { replace: true }) })
                         } }>
                             Sign out
                         </Nav.Link>
