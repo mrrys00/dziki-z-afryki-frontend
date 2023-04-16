@@ -1,4 +1,4 @@
-export const trueObject = (obj): boolean => {
+export const trueObject = (obj: object): boolean => {
     if (obj === null || obj === undefined) {
         return false
     }

@@ -8,7 +8,8 @@ import { type UserInputAuthentication } from '../../../Types/Types'
 import './Authentication.css'
 import { PATH_AUTH_AUTHENTICATION } from '../../../Constants/Paths.d'
 import { ROUTE_HOME } from '../../../Constants/Routes.d'
-import { trueObject } from '../../../Utils/Utils.d'
+import { trueObject } from '../../../Utils/Utils'
+import { LOGIN_FAILED } from '../../../Constants/Auth.d'
 
 const emailRegex = /^\S+@\S+\.\S+$/
 
@@ -64,7 +65,8 @@ const AuthenticationPage: React.FC = () => {
             })
         } else {
             setShowAlert(true)
-            setAlertMess(resp.response.data)
+            console.log(resp)
+            setAlertMess(LOGIN_FAILED)
         }
     }
 
