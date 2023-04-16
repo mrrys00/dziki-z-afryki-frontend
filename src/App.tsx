@@ -25,7 +25,7 @@ const App: React.FC = () => {
         <div className="App">
             <NavbarComponent />
             <Routes>
-                <Route path="/" element={<Navigate to={ROUTE_AUTHENTICATION} replace={true} />}>
+                <Route path="/" element={<Navigate to={ROUTE_HOME} replace={true} />}>
                 </Route>
 
                 <Route path={ROUTE_HOME} element={<Home />} />
