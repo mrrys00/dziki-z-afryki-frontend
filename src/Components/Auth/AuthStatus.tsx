@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { useAuth } from './AuthProvider'
 
-export const AuthStatus: React.FC = () => {
+const AuthStatus: React.FC = () => {
     const auth = useAuth()
 
     if (auth.user === null) {
@@ -14,3 +14,5 @@ export const AuthStatus: React.FC = () => {
         </p>
     )
 }
+
+export default AuthStatus

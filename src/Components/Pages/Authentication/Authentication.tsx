@@ -9,7 +9,7 @@ import './Authentication.css'
 import { PATH_AUTH_AUTHENTICATION } from '../../../Constants/Paths.d'
 import { ROUTE_HOME } from '../../../Constants/Routes.d'
 
-export const AuthenticationPage: React.FC = () => {
+const AuthenticationPage: React.FC = () => {
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
     const [input, setInput] = useState<UserInputAuthentication>(() => ({
@@ -102,3 +102,5 @@ export const AuthenticationPage: React.FC = () => {
         </Container>
     )
 }
+
+export default AuthenticationPage

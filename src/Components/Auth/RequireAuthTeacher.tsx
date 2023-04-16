@@ -5,7 +5,7 @@ import { ROUTE_AUTHENTICATION } from '../../Constants/Routes.d'
 import { useAuth } from './AuthProvider'
 import Loading from './Loading'
 
-export const RequireAuthTeacher = (): JSX.Element => {
+const RequireAuthTeacher = (): JSX.Element => {
     const auth = useAuth()
     const location = useLocation()
 
@@ -20,3 +20,5 @@ export const RequireAuthTeacher = (): JSX.Element => {
 
     return <Outlet />
 }
+
+export default RequireAuthTeacher

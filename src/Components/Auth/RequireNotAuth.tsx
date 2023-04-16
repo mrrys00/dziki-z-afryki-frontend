@@ -6,7 +6,7 @@ import { useAuth } from './AuthProvider'
 
 import './RequireNotAuth.css'
 
-export const RequireNotAuth = (): JSX.Element => {
+const RequireNotAuth = (): JSX.Element => {
     const navigate = useNavigate()
     const auth = useAuth()
 
@@ -35,3 +35,5 @@ export const RequireNotAuth = (): JSX.Element => {
 
     return <Outlet />
 }
+
+export default RequireNotAuth

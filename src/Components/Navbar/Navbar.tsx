@@ -6,7 +6,7 @@ import { useAuth } from '../Auth/AuthProvider'
 import { ROLE_STUDENT, ROLE_TEACHER } from '../../Constants/Auth.d'
 import { ROUTE_AUTHENTICATION, ROUTE_HOME, ROUTE_REGISTER } from '../../Constants/Routes.d'
 
-export const NavbarComponent = (): JSX.Element => {
+const NavbarComponent = (): JSX.Element => {
     const navigate = useNavigate()
     const location = useLocation()
     const auth = useAuth()
@@ -62,3 +62,5 @@ export const NavbarComponent = (): JSX.Element => {
         </Navbar>
     )
 }
+
+export default NavbarComponent

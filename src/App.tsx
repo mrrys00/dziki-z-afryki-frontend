@@ -8,12 +8,12 @@ import {
     Navigate
 } from 'react-router-dom'
 
-import { NavbarComponent } from './Components/Navbar/Navbar'
+import NavbarComponent from './Components/Navbar/Navbar'
 import Home from './Components/Pages/Home/Home'
 
-import { AuthenticationPage } from './Components/Pages/Authentication/Authentication'
-import { RegisterPage } from './Components/Pages/Register/Register'
-import { RequireNotAuth } from './Components/Auth/RequireNotAuth'
+import AuthenticationPage from './Components/Pages/Authentication/Authentication'
+import RegisterPage from './Components/Pages/Register/Register'
+import RequireNotAuth from './Components/Auth/RequireNotAuth'
 import NotFound from './Components/Pages/NotFound/NotFound'
 
 import axios from 'axios'

@@ -13,7 +13,7 @@ import './Register.css'
 import { ROLE_STUDENT, ROLE_TEACHER } from '../../../Constants/Auth.d'
 import { ROUTE_HOME } from '../../../Constants/Routes.d'
 
-export const RegisterPage = (): JSX.Element => {
+const RegisterPage = (): JSX.Element => {
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
 
@@ -176,3 +176,5 @@ export const RegisterPage = (): JSX.Element => {
 
     return <Home />
 }
+
+export default RegisterPage
