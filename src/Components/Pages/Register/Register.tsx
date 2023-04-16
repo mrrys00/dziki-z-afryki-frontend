@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, InputGroup, Row, Container, Alert } from 'react-bootstrap'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
@@ -12,6 +12,9 @@ import { PATH_AUTH_REGISTER } from '../../../Constants/Paths.d'
 import './Register.css'
 import { ROLE_STUDENT, ROLE_TEACHER } from '../../../Constants/Auth.d'
 import { ROUTE_HOME } from '../../../Constants/Routes.d'
+import { trueObject } from '../../../Utils/Utils.d'
+
+const emailRegex = /^\S+@\S+\.\S+$/
 
 const RegisterPage = (): JSX.Element => {
     const [showAlert, setShowAlert] = useState(false)
@@ -25,6 +28,20 @@ const RegisterPage = (): JSX.Element => {
         role: ROLE_STUDENT,
         indexNumber: 0
     }))
+    const [inputValidator, setInputValidator] = useState(() => ({
+        firstName: false,
+        lastName: false,
+        email: false,
+        password: false,
+        indexNumber: false
+    }))
+    const [inputDirty, setInputDirty] = useState(() => ({
+        firstName: false,
+        lastName: false,
+        email: false,
+        password: false,
+        indexNumber: false
+    }))
 
     const navigate = useNavigate()
     const location = useLocation()
@@ -32,6 +49,37 @@ const RegisterPage = (): JSX.Element => {
 
     const state = location.state as { from: Location }
     const from = state != null ? state.from.pathname : ROUTE_HOME
+
+    useEffect(() => {
+        const result = emailRegex.test(input.email.trim())
+        setInputValidator((s) => ({ ...s, email: result }))
+    }, [input.email])
+
+    useEffect(() => {
+        const result = input.password.trim() !== ''
+        setInputValidator((s) => ({ ...s, password: result }))
+    }, [input.password])
+
+    useEffect(() => {
+        const result = input.firstName.trim() !== ''
+        setInputValidator((s) => ({ ...s, firstName: result }))
+    }, [input.firstName])
+
+    useEffect(() => {
+        const result = input.lastName.trim() !== ''
+        setInputValidator((s) => ({ ...s, lastName: result }))
+    }, [input.lastName])
+
+    useEffect(() => {
+        if (input.role === ROLE_STUDENT) {
+            const result = input.indexNumber.toString().trim() !== '' &&
+                input.indexNumber.toString().length === 6
+            setInputValidator((s) => ({ ...s, indexNumber: result }))
+        } else {
+            setInputDirty((s) => ({ ...s, indexNumber: true }))
+            setInputValidator((s) => ({ ...s, indexNumber: true }))
+        }
+    }, [input.role, input.indexNumber])
 
     async function registerUser (): Promise<any> {
         console.log(input)
@@ -71,13 +119,17 @@ const RegisterPage = (): JSX.Element => {
                                 placeholder="Email"
                                 required
                                 value={input.email}
-                                // isInvalid={!inputValidator.email}
+                                isInvalid={inputDirty.email && !inputValidator.email}
                                 onChange={(val) => {
                                     setInput((s) => ({ ...s, email: val.target.value }))
-                                } } />
-                            {/* <Form.Control.Feedback type="invalid">
+                                }}
+                                onFocus={() => {
+                                    setInputDirty((s) => ({ ...s, email: true }))
+                                }}
+                            />
+                            <Form.Control.Feedback type="invalid">
                                 Please provide a valid email.
-                            </Form.Control.Feedback> */}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group as={Col} md="6" controlId="validationCustom04">
                             <Form.Label>Password</Form.Label>
@@ -86,13 +138,17 @@ const RegisterPage = (): JSX.Element => {
                                 placeholder="Password"
                                 required
                                 value={input.password}
-                                // isInvalid={!inputValidator.password}
+                                isInvalid={inputDirty.password && !inputValidator.password}
                                 onChange={(val) => {
                                     setInput((s) => ({ ...s, password: val.target.value }))
-                                } } />
-                            {/* <Form.Control.Feedback type="invalid">
+                                }}
+                                onFocus={() => {
+                                    setInputDirty((s) => ({ ...s, password: true }))
+                                }}
+                            />
+                            <Form.Control.Feedback type="invalid">
                                 Please provide a valid password.
-                            </Form.Control.Feedback> */}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 
@@ -100,32 +156,40 @@ const RegisterPage = (): JSX.Element => {
                         <Form.Group as={Col} md="6" controlId="validationCustom01">
                             <Form.Label>First name</Form.Label>
                             <Form.Control
+                                type="text"
+                                placeholder="First name"
                                 required
                                 value={input.firstName}
-                                // isInvalid={!inputValidator.firstName}
+                                isInvalid={inputDirty.firstName && !inputValidator.firstName}
                                 onChange={(val) => {
                                     setInput((s) => ({ ...s, firstName: val.target.value }))
-                                } }
-                                type="text"
-                                placeholder="First name" />
-                            {/* <Form.Control.Feedback type="invalid">
+                                }}
+                                onFocus={() => {
+                                    setInputDirty((s) => ({ ...s, firstName: true }))
+                                }}
+                            />
+                            <Form.Control.Feedback type="invalid">
                                 Provide a valid firstname!
-                            </Form.Control.Feedback> */}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group as={Col} md="6" controlId="validationCustom02">
                             <Form.Label>Last name</Form.Label>
                             <Form.Control
+                                type="text"
+                                placeholder="Last name"
                                 required
                                 value={input.lastName}
-                                // isInvalid={!inputValidator.lastName}
+                                isInvalid={inputDirty.lastName && !inputValidator.lastName}
                                 onChange={(val) => {
                                     setInput((s) => ({ ...s, lastName: val.target.value }))
-                                } }
-                                type="text"
-                                placeholder="Last name" />
-                            {/* <Form.Control.Feedback type="invalid">
+                                }}
+                                onFocus={() => {
+                                    setInputDirty((s) => ({ ...s, lastName: true }))
+                                }}
+                            />
+                            <Form.Control.Feedback type="invalid">
                                 Provide a valid lastname!
-                            </Form.Control.Feedback> */}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 
@@ -139,32 +203,40 @@ const RegisterPage = (): JSX.Element => {
                                     setInput((s) => ({ ...s, role: val.target.value }))
                                 }}
                             >
-                                <option value="STUDENT">student</option>
-                                <option value="TEACHER">teacher</option>
+                                <option value={ROLE_STUDENT}>student</option>
+                                <option value={ROLE_TEACHER}>teacher</option>
                             </Form.Select>
                         </Form.Group>
                         <Form.Group as={Col} md="6" controlId="validationCustomUsername">
                             <Form.Label>Index number</Form.Label>
                             <InputGroup hasValidation>
                                 <Form.Control
-                                    type="text"
-                                    placeholder="Username"
+                                    type="number"
                                     aria-describedby="inputGroupPrepend"
                                     required
                                     value={input.indexNumber}
-                                    // isInvalid={!inputValidator.indexNumber}
+                                    isInvalid={input.role === ROLE_STUDENT &&
+                                        inputDirty.indexNumber && !inputValidator.indexNumber}
                                     onChange={(val) => {
                                         setInput((s) => ({ ...s, indexNumber: val.target.value }))
-                                    } }
+                                    }}
+                                    onFocus={() => {
+                                        setInputDirty((s) => ({ ...s, indexNumber: true }))
+                                    }}
                                     disabled={ input.role === ROLE_TEACHER } />
-                                {/* <Form.Control.Feedback type="invalid">
-                                    Please choose a index number.
-                                </Form.Control.Feedback> */}
+                                -<Form.Control.Feedback type="invalid">
+                                    Please choose a valid index number.
+                                </Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
                     </Row>
 
-                    <Button variant="success" onClick={handleSubmit}>Register</Button>
+                    <Button
+                        variant="success"
+                        onClick={handleSubmit}
+                        disabled={!(trueObject(inputDirty) && trueObject(inputValidator))}>
+                        Register
+                    </Button>
                 </Form>
 
                 <Alert show={showAlert} variant="danger">
