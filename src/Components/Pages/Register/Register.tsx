@@ -3,15 +3,15 @@ import { Button, Col, Form, InputGroup, Row, Container, Alert } from 'react-boot
 import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 
-import { useAuth } from '../Auth/AuthProvider'
+import { useAuth } from '../../Auth/AuthProvider'
 import Home from '../Home/Home'
 
-import { type UserInputRegister } from '../../Types/Types'
-import { PATH_AUTH_REGISTER } from '../../Constants/Paths.d'
+import { type UserInputRegister } from '../../../Types/Types'
+import { PATH_AUTH_REGISTER } from '../../../Constants/Paths.d'
 
 import './Register.css'
-import { ROLE_STUDENT, ROLE_TEACHER } from '../../Constants/Auth.d'
-import { ROUTE_HOME } from '../../Constants/Routes.d'
+import { ROLE_STUDENT, ROLE_TEACHER } from '../../../Constants/Auth.d'
+import { ROUTE_HOME } from '../../../Constants/Routes.d'
 
 export const RegisterPage = (): JSX.Element => {
     const [showAlert, setShowAlert] = useState(false)

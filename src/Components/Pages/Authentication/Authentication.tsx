@@ -2,12 +2,12 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useAuth } from '../Auth/AuthProvider'
-import { type UserInputAuthentication } from '../../Types/Types'
+import { useAuth } from '../../Auth/AuthProvider'
+import { type UserInputAuthentication } from '../../../Types/Types'
 
 import './Authentication.css'
-import { PATH_AUTH_AUTHENTICATION } from '../../Constants/Paths.d'
-import { ROUTE_HOME } from '../../Constants/Routes.d'
+import { PATH_AUTH_AUTHENTICATION } from '../../../Constants/Paths.d'
+import { ROUTE_HOME } from '../../../Constants/Routes.d'
 
 export const AuthenticationPage: React.FC = () => {
     const [showAlert, setShowAlert] = useState(false)

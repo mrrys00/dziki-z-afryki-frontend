@@ -9,12 +9,12 @@ import {
 } from 'react-router-dom'
 
 import { NavbarComponent } from './Components/Navbar/Navbar'
-import Home from './Components/Home/Home'
+import Home from './Components/Pages/Home/Home'
 
-import { AuthenticationPage } from './Components/Authentication/Authentication'
-import { RegisterPage } from './Components/Register/Register'
+import { AuthenticationPage } from './Components/Pages/Authentication/Authentication'
+import { RegisterPage } from './Components/Pages/Register/Register'
 import { RequireNotAuth } from './Components/Auth/RequireNotAuth'
-import NotFound from './Components/NotFound/NotFound'
+import NotFound from './Components/Pages/NotFound/NotFound'
 
 import axios from 'axios'
 import { ROUTE_AUTHENTICATION, ROUTE_HOME, ROUTE_REGISTER } from './Constants/Routes.d'
