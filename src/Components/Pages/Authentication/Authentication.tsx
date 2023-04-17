@@ -9,7 +9,7 @@ import './Authentication.css'
 import { PATH_AUTH_AUTHENTICATION } from '../../../Constants/Paths.d'
 import { ROUTE_HOME } from '../../../Constants/Routes.d'
 import { trueObject } from '../../../Utils/Utils'
-import { LOGIN_FAILED } from '../../../Constants/Auth.d'
+import { LOGIN_FAILED } from '../../../Constants/Errors.d'
 
 const emailRegex = /^\S+@\S+\.\S+$/
 

@@ -17,8 +17,42 @@ export interface UserInputAuthentication {
 export interface DecodedUser {
     email: string
     role: ROLES
+    sub: string
 }
 
 export interface AuthResponse {
     jwt: string
+}
+
+export interface CourseDate {
+    weekDay: string
+    startTime: string
+    endTime: string
+}
+
+export interface CourseInput {
+    name: string
+    description: string
+    dates: CourseDate[]
+    code: string
+}
+
+export interface Course {
+    id: number
+    name: string
+    description: string
+    dates: CourseDate[]
+    code: string
+    owner: string
+    students: string[]
+}
+
+export enum DAYS_OF_WEEK {
+    MONDAY = 'MONDAY',
+    TUESDAY = 'TUESDAY',
+    WEDNESDAY = 'WEDNESDAY',
+    THURSDAY = 'THURSDAY',
+    FRIDAY = 'FRIDAY',
+    SATURDAY = 'SATURDAY',
+    SUNDAY = 'SUNDAY'
 }

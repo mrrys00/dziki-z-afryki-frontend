@@ -53,3 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }): JSX.E
 export function useAuth (): AuthContextType {
     return React.useContext(AuthContext)
 }
+
+export const getToken = (): string => {
+    return localStorage.getItem(JWT) ?? ''
+}
