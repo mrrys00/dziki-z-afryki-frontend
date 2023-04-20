@@ -1,0 +1,44 @@
+.Home-container {
+  margin: auto;
+}
+
+.Home {
+  padding-top: 200px;
+}
+
+.Home-title {
+  border: 0px;
+  border-radius: 10px;
+  position: relative;
+  top: 15vh;
+  background-color: rgba(225, 225, 225, 0.5);
+  height: 100%;
+  color: #000000;
+  font-family: "Times New Roman", Times, serif, sans-serif;
+  font-size: 62px;
+  font-weight: 800;
+  line-height: 52px;
+  margin: 0 0 24px;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 3%;
+}
+
+h1 {
+  
+}
+
+.MapContact {
+  border: 0px;
+  border-radius: 10px;
+  position: relative;
+  top: 25vh;
+  width: 100%;
+  padding: 1%;
+  background-color: rgba(225, 225, 225, 0.5);
+  font-size: larger;
+}
+
+.Map {
+  position: relative;
+}

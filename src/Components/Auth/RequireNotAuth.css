@@ -1,0 +1,6 @@
+.Alert-container {
+    margin: auto;
+    position: relative;
+    width: 100%;
+    background-color: rgba(225, 225, 225, 0.5);
+}
