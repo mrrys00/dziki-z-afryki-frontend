@@ -10,9 +10,10 @@ import { type UserInputRegister } from '../../../Types/Types'
 import { PATH_AUTH_REGISTER } from '../../../Constants/Paths.d'
 
 import './Register.css'
-import { EMAIL_EXISTS, ROLE_STUDENT, ROLE_TEACHER } from '../../../Constants/Auth.d'
+import { ROLE_STUDENT, ROLE_TEACHER } from '../../../Constants/Auth.d'
 import { ROUTE_HOME } from '../../../Constants/Routes.d'
 import { trueObject } from '../../../Utils/Utils'
+import { EMAIL_EXISTS, BASIC_ERROR } from '../../../Constants/Errors.d'
 
 const emailRegex = /^\S+@\S+\.\S+$/
 
@@ -107,7 +108,7 @@ const RegisterPage = (): JSX.Element => {
         } else {
             setShowAlert(true)
             console.log(resp)
-            setAlertMess('Something went wrong.')
+            setAlertMess(BASIC_ERROR)
         }
     }
 
