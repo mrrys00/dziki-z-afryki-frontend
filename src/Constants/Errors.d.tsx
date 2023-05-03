@@ -1,3 +1,6 @@
 export const LOGIN_FAILED = 'Invalid email or password'
 export const EMAIL_EXISTS = 'User with this email already exists'
 export const BASIC_ERROR = 'Something went wrong'
+export const DATE_FIELDS_REQUIRED = 'All date fields are required'
+export const FIELDS_REQUIRED = 'All fields are required'
+export const INVALID_START_END_TIME = 'Start time must be before end time'
