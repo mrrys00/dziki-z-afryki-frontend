@@ -4,7 +4,8 @@ import { Container, Nav, Navbar } from 'react-bootstrap'
 
 import { useAuth } from '../Auth/AuthProvider'
 import { ROLE_STUDENT, ROLE_TEACHER } from '../../Constants/Auth.d'
-import { ROUTE_AUTHENTICATION, ROUTE_HOME, ROUTE_REGISTER } from '../../Constants/Routes.d'
+import { ROUTE_AUTHENTICATION, ROUTE_COURSES, ROUTE_HOME, ROUTE_REGISTER }
+    from '../../Constants/Routes.d'
 
 const NavbarComponent: React.FC = (): JSX.Element => {
     const navigate = useNavigate()
@@ -24,6 +25,7 @@ const NavbarComponent: React.FC = (): JSX.Element => {
                     <>
                         <Nav className="me-auto">
                             <Nav.Link as={Link} to={ROUTE_HOME}>Home</Nav.Link>
+                            <Nav.Link as={Link} to={ROUTE_COURSES}>Courses</Nav.Link>
                         </Nav>
                         <Nav>
                             <Nav.Link disabled={true}>Welcome {auth.user?.email}!</Nav.Link>
