@@ -38,7 +38,7 @@ export interface CourseInput {
 }
 
 export interface Course {
-    id: number
+    courseId: string
     name: string
     description: string
     dates: CourseDate[]
