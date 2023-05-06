@@ -43,7 +43,7 @@ export interface Course {
     description: string
     dates: CourseDate[]
     code: string
-    owner: string
+    ownerEmail: string
     students: string[]
 }
 

@@ -6,6 +6,8 @@ import axios from 'axios'
 import { PATH_COURSE } from '../../Constants/Paths.d'
 import { truthyObject } from '../../Utils/Utils'
 import CourseFormDate from './CourseFormDate'
+import { DATE_FIELDS_REQUIRED, FIELDS_REQUIRED, INVALID_START_END_TIME }
+    from '../../Constants/Errors.d'
 
 const CourseForm: React.FC = () => {
     const [showAlert, setShowAlert] = useState(false)
@@ -30,7 +32,7 @@ const CourseForm: React.FC = () => {
                 name: input.name,
                 description: input.description,
                 code: input.code,
-                owner: auth.user?.sub ?? '',
+                ownerEmail: auth.user?.sub ?? '',
                 dates: input.dates
             },
             {
@@ -48,7 +50,7 @@ const CourseForm: React.FC = () => {
         if (input.name === '' ||
             input.description === '' || input.code === '') {
             setShowAlert(true)
-            setAlertMess('All fields are required')
+            setAlertMess(FIELDS_REQUIRED)
             return
         }
 
@@ -66,12 +68,12 @@ const CourseForm: React.FC = () => {
         if (currentDate.weekDay === '' || currentDate.startTime === '' ||
             currentDate.endTime === '') {
             setShowAlert(true)
-            setAlertMess('All fields in date are required')
+            setAlertMess(DATE_FIELDS_REQUIRED)
             return
         }
         if (currentDate.startTime >= currentDate.endTime) {
             setShowAlert(true)
-            setAlertMess('Start time must be before end time')
+            setAlertMess(INVALID_START_END_TIME)
             return
         }
         setInput((s) => ({ ...s, dates: [...s.dates, currentDate] }))
