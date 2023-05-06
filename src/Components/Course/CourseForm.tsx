@@ -9,7 +9,8 @@ import CourseFormDate from './CourseFormDate'
 import { DATE_FIELDS_REQUIRED, FIELDS_REQUIRED, INVALID_START_END_TIME }
     from '../../Constants/Errors.d'
 
-const CourseForm: React.FC = () => {
+// eslint-disable-next-line max-len
+const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateAction<boolean>> }> = ({ setReloadCourse }) => {
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
     const [input, setInput] = useState<CourseInput>(() => ({
@@ -41,9 +42,10 @@ const CourseForm: React.FC = () => {
                         Authorization: 'Bearer ' + getToken()
                     }
             }
-        ).catch(error => {
-            return error
-        })
+        ).then(() => { setReloadCourse((s) => !s) })
+            .catch(error => {
+                return error
+            })
     }
 
     const handleSubmit = async (): Promise<void> => {
