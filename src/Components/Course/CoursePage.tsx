@@ -56,8 +56,6 @@ const CoursePage: React.FC = () => {
                 <Card.Body>
                     <Card.Subtitle>Description</Card.Subtitle>
                     <Card.Text>{course?.description}</Card.Text>
-                    <Card.Subtitle>Code</Card.Subtitle>
-                    <Card.Text>{course?.code}</Card.Text>
                     <Card.Subtitle>Share code</Card.Subtitle>
                     <Card.Text>{course?.courseId}</Card.Text>
                     <Card.Subtitle>Owner</Card.Subtitle>
