@@ -9,14 +9,14 @@ import CourseFormDate from './CourseFormDate'
 import { DATE_FIELDS_REQUIRED, FIELDS_REQUIRED, INVALID_START_END_TIME }
     from '../../Constants/Errors.d'
 
-const CourseForm: React.FC = () => {
+// eslint-disable-next-line max-len
+const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateAction<boolean>> }> = ({ setReloadCourse }) => {
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
     const [input, setInput] = useState<CourseInput>(() => ({
         name: '',
         description: '',
-        dates: [],
-        code: ''
+        dates: []
     }))
     const [currentDate, setCurrentDate] = useState<CourseDate>(() => ({
         weekDay: DAYS_OF_WEEK.MONDAY,
@@ -31,7 +31,7 @@ const CourseForm: React.FC = () => {
             {
                 name: input.name,
                 description: input.description,
-                code: input.code,
+                code: '',
                 ownerEmail: auth.user?.sub ?? '',
                 dates: input.dates
             },
@@ -47,8 +47,7 @@ const CourseForm: React.FC = () => {
     }
 
     const handleSubmit = async (): Promise<void> => {
-        if (input.name === '' ||
-            input.description === '' || input.code === '') {
+        if (input.name === '' || input.description === '') {
             setShowAlert(true)
             setAlertMess(FIELDS_REQUIRED)
             return
@@ -57,6 +56,7 @@ const CourseForm: React.FC = () => {
         const resp = await addCourse()
         if (resp.status === 200) {
             clearForm()
+            setReloadCourse((s) => !s)
         } else {
             setShowAlert(true)
             console.log(resp)
@@ -90,8 +90,7 @@ const CourseForm: React.FC = () => {
         setInput(() => ({
             name: '',
             description: '',
-            dates: [],
-            code: ''
+            dates: []
         }))
         setAlertMess('')
         setShowAlert(false)
@@ -111,17 +110,6 @@ const CourseForm: React.FC = () => {
                             } }
                             type="text"
                             placeholder="Course name" />
-                    </Form.Group>
-                    <Form.Group as={Col} controlId="validationCustom03">
-                        <Form.Label>Course code</Form.Label>
-                        <Form.Control
-                            required
-                            value={input.code}
-                            onChange={(val) => {
-                                setInput((s) => ({ ...s, code: val.target.value }))
-                            } }
-                            type="text"
-                            placeholder="Course code" />
                     </Form.Group>
                     <Form.Label>Course description</Form.Label>
                     <Form.Control

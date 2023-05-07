@@ -34,17 +34,15 @@ export interface CourseInput {
     name: string
     description: string
     dates: CourseDate[]
-    code: string
 }
 
 export interface Course {
-    id: number
+    courseId: string
     name: string
     description: string
     dates: CourseDate[]
-    code: string
     ownerEmail: string
-    students: string[]
+    users: string[]
 }
 
 export enum DAYS_OF_WEEK {
