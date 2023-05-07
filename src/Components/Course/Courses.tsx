@@ -23,7 +23,7 @@ const Courses: React.FC = () => {
                         Authorization: 'Bearer ' + getToken()
                     }
             }).then(resp => {
-            setCourses(resp.data)
+            setCourses(resp.data.filter((course: Course) => course.ownerEmail === auth.user?.sub))
         }).catch(error => {
             return error
         })

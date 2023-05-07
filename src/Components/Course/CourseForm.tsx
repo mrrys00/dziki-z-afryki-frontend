@@ -16,8 +16,7 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
     const [input, setInput] = useState<CourseInput>(() => ({
         name: '',
         description: '',
-        dates: [],
-        code: ''
+        dates: []
     }))
     const [currentDate, setCurrentDate] = useState<CourseDate>(() => ({
         weekDay: DAYS_OF_WEEK.MONDAY,
@@ -32,7 +31,7 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
             {
                 name: input.name,
                 description: input.description,
-                code: input.code,
+                code: '',
                 ownerEmail: auth.user?.sub ?? '',
                 dates: input.dates
             },
@@ -42,15 +41,13 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
                         Authorization: 'Bearer ' + getToken()
                     }
             }
-        ).then(() => { setReloadCourse((s) => !s) })
-            .catch(error => {
-                return error
-            })
+        ).catch(error => {
+            return error
+        })
     }
 
     const handleSubmit = async (): Promise<void> => {
-        if (input.name === '' ||
-            input.description === '' || input.code === '') {
+        if (input.name === '' || input.description === '') {
             setShowAlert(true)
             setAlertMess(FIELDS_REQUIRED)
             return
@@ -59,6 +56,7 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
         const resp = await addCourse()
         if (resp.status === 200) {
             clearForm()
+            setReloadCourse((s) => !s)
         } else {
             setShowAlert(true)
             console.log(resp)
@@ -92,8 +90,7 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
         setInput(() => ({
             name: '',
             description: '',
-            dates: [],
-            code: ''
+            dates: []
         }))
         setAlertMess('')
         setShowAlert(false)
@@ -113,17 +110,6 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
                             } }
                             type="text"
                             placeholder="Course name" />
-                    </Form.Group>
-                    <Form.Group as={Col} controlId="validationCustom03">
-                        <Form.Label>Course code</Form.Label>
-                        <Form.Control
-                            required
-                            value={input.code}
-                            onChange={(val) => {
-                                setInput((s) => ({ ...s, code: val.target.value }))
-                            } }
-                            type="text"
-                            placeholder="Course code" />
                     </Form.Group>
                     <Form.Label>Course description</Form.Label>
                     <Form.Control
