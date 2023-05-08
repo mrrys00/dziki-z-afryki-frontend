@@ -27,12 +27,10 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
 
     const addCourse = async (): Promise<any> => {
         return await axios.post(
-            PATH_COURSE,
+            PATH_COURSE + '/create',
             {
                 name: input.name,
                 description: input.description,
-                code: '',
-                ownerEmail: auth.user?.sub ?? '',
                 dates: input.dates
             },
             {

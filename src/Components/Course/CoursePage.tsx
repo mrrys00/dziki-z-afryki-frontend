@@ -7,7 +7,7 @@ import { Alert, Button, Card, CardGroup, Col, Container, Form } from 'react-boot
 import { useNavigate, useParams } from 'react-router-dom'
 import CourseFormDate from './CourseFormDate'
 import { DATE_FIELDS_REQUIRED, INVALID_START_END_TIME } from '../../Constants/Errors.d'
-import { truthyObject } from '../../Utils/Utils'
+// import { truthyObject } from '../../Utils/Utils'
 import { ROUTE_COURSES } from '../../Constants/Routes.d'
 
 const CoursePage: React.FC = () => {
@@ -15,7 +15,7 @@ const CoursePage: React.FC = () => {
     const [course, setCourse] = useState<Course | null>(null)
     const [dates, setDates] = useState<CourseDate[]>([])
     const [description, setDescription] = useState('')
-    const [editDescription, setEditDescription] = useState(false)
+    // const [editDescription, setEditDescription] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
     const [currentDate, setCurrentDate] = useState<CourseDate>(() => ({
@@ -26,34 +26,34 @@ const CoursePage: React.FC = () => {
     const [reload, setReload] = useState(false)
     const navigate = useNavigate()
 
-    const handleAddDate = (): void => {
-        if (currentDate.weekDay === '' || currentDate.startTime === '' ||
-            currentDate.endTime === '') {
-            setShowAlert(true)
-            setAlertMess(DATE_FIELDS_REQUIRED)
-            return
-        }
-        if (currentDate.startTime >= currentDate.endTime) {
-            setShowAlert(true)
-            setAlertMess(INVALID_START_END_TIME)
-            return
-        }
-        setReload(true)
-        setDates((s) => ([...s, currentDate]))
-        setCurrentDate({
-            weekDay: DAYS_OF_WEEK.MONDAY,
-            startTime: '',
-            endTime: ''
-        })
-        setAlertMess('')
-        setShowAlert(false)
-    }
+    // const handleAddDate = (): void => {
+    //     if (currentDate.weekDay === '' || currentDate.startTime === '' ||
+    //         currentDate.endTime === '') {
+    //         setShowAlert(true)
+    //         setAlertMess(DATE_FIELDS_REQUIRED)
+    //         return
+    //     }
+    //     if (currentDate.startTime >= currentDate.endTime) {
+    //         setShowAlert(true)
+    //         setAlertMess(INVALID_START_END_TIME)
+    //         return
+    //     }
+    //     setReload(true)
+    //     setDates((s) => ([...s, currentDate]))
+    //     setCurrentDate({
+    //         weekDay: DAYS_OF_WEEK.MONDAY,
+    //         startTime: '',
+    //         endTime: ''
+    //     })
+    //     setAlertMess('')
+    //     setShowAlert(false)
+    // }
 
-    const handleDeleteDate = (index: number): void => {
-        setReload(true)
-        const newDates = dates.filter((date, i) => i !== index)
-        setDates(newDates)
-    }
+    // const handleDeleteDate = (index: number): void => {
+    //     setReload(true)
+    //     const newDates = dates.filter((date, i) => i !== index)
+    //     setDates(newDates)
+    // }
 
     const handleDeleteCourse = (): void => {
         axios.delete(
@@ -72,30 +72,30 @@ const CoursePage: React.FC = () => {
             })
     }
 
-    const handleChangeDescription = (): void => {
-        axios.put(
-            PATH_COURSE + '/' + courseId!,
-            {
-                description
-            },
-            {
-                headers:
-                    {
-                        Authorization: 'Bearer ' + getToken()
-                    }
-            }
-        ).then(resp => {
-            if (resp.status === 200) {
-                setEditDescription(false)
-                setShowAlert(false)
-                setAlertMess('')
-            }
-        }).catch(error => {
-            setShowAlert(true)
-            console.log(error)
-            setAlertMess(error.response.data)
-        })
-    }
+    // const handleChangeDescription = (): void => {
+    //     axios.put(
+    //         PATH_COURSE + '/' + courseId!,
+    //         {
+    //             description
+    //         },
+    //         {
+    //             headers:
+    //                 {
+    //                     Authorization: 'Bearer ' + getToken()
+    //                 }
+    //         }
+    //     ).then(resp => {
+    //         if (resp.status === 200) {
+    //             // setEditDescription(false)
+    //             setShowAlert(false)
+    //             setAlertMess('')
+    //         }
+    //     }).catch(error => {
+    //         setShowAlert(true)
+    //         console.log(error)
+    //         setAlertMess(error.response.data)
+    //     })
+    // }
 
     useEffect(() => {
         if (reload) {
@@ -152,9 +152,8 @@ const CoursePage: React.FC = () => {
                 courseId: resp.data.courseId,
                 name: resp.data.name,
                 description: resp.data.description,
-                code: resp.data.code,
-                ownerEmail: resp.data.ownerEmail,
-                users: resp.data.users,
+                teacher: resp.data.teacher,
+                students: resp.data.students,
                 dates
             }))
             setDates(dates)
@@ -173,7 +172,8 @@ const CoursePage: React.FC = () => {
                 <Card.Body>
                     <Card.Subtitle>Description</Card.Subtitle>
                     <Card.Text>
-                        {editDescription
+                        {description}
+                        {/* {editDescription
                             ? (<>
                                 <input type="text" value={description}
                                     onChange={(e) => { setDescription(e.target.value) }} />
@@ -190,14 +190,14 @@ const CoursePage: React.FC = () => {
                                     style={{ float: 'right' }}
                                     onClick={() => { setEditDescription(true) }}>
                                     Edit</Button>
-                            </>)}
+                            </>)} */}
                     </Card.Text>
                 </Card.Body>
                 <Card.Body>
                     <Card.Subtitle>Share code</Card.Subtitle>
                     <Card.Text>{course?.courseId}</Card.Text>
                     <Card.Subtitle>Owner</Card.Subtitle>
-                    <Card.Text>{course?.ownerEmail}</Card.Text>
+                    <Card.Text>{course?.teacher}</Card.Text>
                 </Card.Body>
             </Card>
             <CardGroup>
@@ -205,15 +205,15 @@ const CoursePage: React.FC = () => {
                     return (
                         <>
                             <CourseFormDate key={index} date={date}/>
-                            <Button variant="danger"
+                            {/* <Button variant="danger"
                                 onClick={() => { handleDeleteDate(index) }}>
-                                Delete</Button>
+                                Delete</Button> */}
                         </>
                     )
                 })
                 }
             </CardGroup>
-            <Form>
+            {/* <Form>
                 <Form.Group as={Col}>
                     <Form.Label>Day of week</Form.Label>
                     <Form.Select
@@ -255,9 +255,9 @@ const CoursePage: React.FC = () => {
                 <Alert show={showAlert} variant="danger">
                     {alertMess}
                 </Alert>
-            </Form>
+            </Form> */}
             <CardGroup>
-                {course?.users.map((student, index) => {
+                {course?.students.map((student, index) => {
                     return (
                         <Card key={index} style={{ minWidth: '20%', flexGrow: 0 }}>
                             <Card.Body>
