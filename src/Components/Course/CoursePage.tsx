@@ -6,8 +6,6 @@ import { getToken } from '../Auth/AuthProvider'
 import { Alert, Button, Card, CardGroup, Col, Container, Form } from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
 import CourseFormDate from './CourseFormDate'
-import { DATE_FIELDS_REQUIRED, INVALID_START_END_TIME } from '../../Constants/Errors.d'
-// import { truthyObject } from '../../Utils/Utils'
 import { ROUTE_COURSES } from '../../Constants/Routes.d'
 
 const CoursePage: React.FC = () => {
@@ -15,45 +13,10 @@ const CoursePage: React.FC = () => {
     const [course, setCourse] = useState<Course | null>(null)
     const [dates, setDates] = useState<CourseDate[]>([])
     const [description, setDescription] = useState('')
-    // const [editDescription, setEditDescription] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
-    const [currentDate, setCurrentDate] = useState<CourseDate>(() => ({
-        weekDay: DAYS_OF_WEEK.MONDAY,
-        startTime: '',
-        endTime: ''
-    }))
     const [reload, setReload] = useState(false)
     const navigate = useNavigate()
-
-    // const handleAddDate = (): void => {
-    //     if (currentDate.weekDay === '' || currentDate.startTime === '' ||
-    //         currentDate.endTime === '') {
-    //         setShowAlert(true)
-    //         setAlertMess(DATE_FIELDS_REQUIRED)
-    //         return
-    //     }
-    //     if (currentDate.startTime >= currentDate.endTime) {
-    //         setShowAlert(true)
-    //         setAlertMess(INVALID_START_END_TIME)
-    //         return
-    //     }
-    //     setReload(true)
-    //     setDates((s) => ([...s, currentDate]))
-    //     setCurrentDate({
-    //         weekDay: DAYS_OF_WEEK.MONDAY,
-    //         startTime: '',
-    //         endTime: ''
-    //     })
-    //     setAlertMess('')
-    //     setShowAlert(false)
-    // }
-
-    // const handleDeleteDate = (index: number): void => {
-    //     setReload(true)
-    //     const newDates = dates.filter((date, i) => i !== index)
-    //     setDates(newDates)
-    // }
 
     const handleDeleteCourse = (): void => {
         axios.delete(
@@ -71,31 +34,6 @@ const CoursePage: React.FC = () => {
                 setAlertMess(error.response.data)
             })
     }
-
-    // const handleChangeDescription = (): void => {
-    //     axios.put(
-    //         PATH_COURSE + '/' + courseId!,
-    //         {
-    //             description
-    //         },
-    //         {
-    //             headers:
-    //                 {
-    //                     Authorization: 'Bearer ' + getToken()
-    //                 }
-    //         }
-    //     ).then(resp => {
-    //         if (resp.status === 200) {
-    //             // setEditDescription(false)
-    //             setShowAlert(false)
-    //             setAlertMess('')
-    //         }
-    //     }).catch(error => {
-    //         setShowAlert(true)
-    //         console.log(error)
-    //         setAlertMess(error.response.data)
-    //     })
-    // }
 
     useEffect(() => {
         if (reload) {
@@ -173,24 +111,6 @@ const CoursePage: React.FC = () => {
                     <Card.Subtitle>Description</Card.Subtitle>
                     <Card.Text>
                         {description}
-                        {/* {editDescription
-                            ? (<>
-                                <input type="text" value={description}
-                                    onChange={(e) => { setDescription(e.target.value) }} />
-                                <Button variant="primary"
-                                    style={{ float: 'right' }}
-                                    onClick={() => { handleChangeDescription() }}>
-                                    Save</Button>
-                            </>)
-                            : (<>
-                                <>
-                                    {description}
-                                </>
-                                <Button variant="primary"
-                                    style={{ float: 'right' }}
-                                    onClick={() => { setEditDescription(true) }}>
-                                    Edit</Button>
-                            </>)} */}
                     </Card.Text>
                 </Card.Body>
                 <Card.Body>
@@ -205,57 +125,11 @@ const CoursePage: React.FC = () => {
                     return (
                         <>
                             <CourseFormDate key={index} date={date}/>
-                            {/* <Button variant="danger"
-                                onClick={() => { handleDeleteDate(index) }}>
-                                Delete</Button> */}
                         </>
                     )
                 })
                 }
             </CardGroup>
-            {/* <Form>
-                <Form.Group as={Col}>
-                    <Form.Label>Day of week</Form.Label>
-                    <Form.Select
-                        value={currentDate.weekDay}
-                        onChange={(val) => {
-                            setCurrentDate((s) => ({ ...s, weekDay: val.target.value }))
-                        }}
-                    >
-                        {Object.keys(DAYS_OF_WEEK).map((day) => {
-                            return <option key={day} value={day}>{day}</option>
-                        })}
-                    </Form.Select>
-                </Form.Group>
-                <Form.Group as={Col}>
-                    <Form.Label>Time from</Form.Label>
-                    <Form.Control
-                        value={currentDate.startTime}
-                        onChange={(val) => {
-                            setCurrentDate((s) => ({ ...s, startTime: val.target.value }))
-                        } }
-                        type="time"
-                    />
-                </Form.Group>
-                <Form.Group as={Col}>
-                    <Form.Label>Time to</Form.Label>
-                    <Form.Control
-                        value={currentDate.endTime}
-                        onChange={(val) => {
-                            setCurrentDate((s) => ({ ...s, endTime: val.target.value }))
-                        } }
-                        type="time"
-                    />
-                </Form.Group>
-                <Button
-                    variant="primary"
-                    onClick={handleAddDate}
-                    disabled={!(truthyObject(currentDate))}
-                >Add date</Button>
-                <Alert show={showAlert} variant="danger">
-                    {alertMess}
-                </Alert>
-            </Form> */}
             <CardGroup>
                 {course?.students.map((student, index) => {
                     return (
