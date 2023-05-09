@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Alert, Button, CardGroup, Col, Container, Form, Row } from 'react-bootstrap'
 import { type CourseInput, type CourseDate, DAYS_OF_WEEK } from '../../Types/Types.d'
-import { getToken, useAuth } from '../Auth/AuthProvider'
+import { getToken } from '../Auth/AuthProvider'
 import axios from 'axios'
 import { PATH_COURSE } from '../../Constants/Paths.d'
 import { truthyObject } from '../../Utils/Utils'
@@ -33,7 +33,6 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
         startTime: '',
         endTime: ''
     }))
-    const auth = useAuth()
 
     useEffect(() => {
         const result = courseNameValidator(input.name.trim())
@@ -82,6 +81,16 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
         }
     }
 
+    const handleNameChange = (val: string): void => {
+        setInput((s) => ({ ...s, name: val }))
+        setInputDirty((s) => ({ ...s, name: true }))
+    }
+
+    const handleDescriptionChange = (val: string): void => {
+        setInput((s) => ({ ...s, description: val }))
+        setInputDirty((s) => ({ ...s, description: true }))
+    }
+
     const handleAddDate = (): void => {
         if (currentDate.weekDay === '' || currentDate.startTime === '' ||
             currentDate.endTime === '') {
@@ -104,6 +113,10 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
         setShowAlert(false)
     }
 
+    const deleteDate = (index: number): void => {
+        setInput((s) => ({ ...s, dates: s.dates.filter((_, i) => i !== index) }))
+    }
+
     const clearForm = (): void => {
         setInput(() => ({
             name: '',
@@ -124,8 +137,8 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
                             required
                             value={input.name}
                             isInvalid={inputDirty.name && !inputValidator.name}
-                            onChange={(val) => {
-                                setInput((s) => ({ ...s, name: val.target.value }))
+                            onChange={(event) => {
+                                handleNameChange(event.target.value)
                             } }
                             type="text"
                             placeholder="Course name" />
@@ -138,8 +151,8 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
                         required
                         value={input.description}
                         isInvalid={inputDirty.description && !inputValidator.description}
-                        onChange={(val) => {
-                            setInput((s) => ({ ...s, description: val.target.value }))
+                        onChange={(event) => {
+                            handleDescriptionChange(event.target.value)
                         } }
                         type="text"
                         placeholder="Course description" />
@@ -188,7 +201,7 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
                 <Button
                     variant="success"
                     onClick={handleSubmit}
-                    disabled={!(input.dates.length !== 0)}
+                    disabled={!(input.dates.length !== 0) || !truthyObject(inputValidator)}
                 >Add course</Button>
                 <Button variant="danger" onClick={clearForm}>Clear</Button>
             </Form>
@@ -198,7 +211,11 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
                 <CardGroup>
                     {input.dates.map((date, index) => {
                         return (
-                            <CourseFormDate date={date} key={index} />
+                            <>
+                                <CourseFormDate date={date} key={index} />
+                                <Button variant="danger" onClick={() => { deleteDate(index) }}>
+                                    Delete</Button>
+                            </>
                         )
                     })}
                 </CardGroup>
