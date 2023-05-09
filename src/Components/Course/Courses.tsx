@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import CourseForm from './CourseForm'
 import { Card, CardGroup, Container } from 'react-bootstrap'
-import { ROLE_TEACHER } from '../../Constants/Auth.d'
+import { ROLE_STUDENT, ROLE_TEACHER } from '../../Constants/Auth.d'
 import { getToken, useAuth } from '../Auth/AuthProvider'
 import { type Course } from '../../Types/Types'
 import axios from 'axios'
 import { PATH_COURSE } from '../../Constants/Paths.d'
 import { Link } from 'react-router-dom'
 import { ROUTE_COURSES } from '../../Constants/Routes.d'
+import CourseEnroll from './CourseEnroll'
 
 const Courses: React.FC = () => {
     const auth = useAuth()
@@ -48,6 +49,7 @@ const Courses: React.FC = () => {
                     })}
                 </CardGroup>
             }
+            {auth.user?.role === ROLE_STUDENT && <CourseEnroll />}
             {auth.user?.role === ROLE_TEACHER && <CourseForm setReloadCourse={setReloadCourses} /> }
         </Container>
     )

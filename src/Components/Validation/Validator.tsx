@@ -1,20 +1,11 @@
+export const emailValidator = (email: string): boolean => /^[^@\s]+@[^@\s]+.[^@\s]+$/.test(email)
 
-export function emailValidator (email: string): boolean {
-    return /^[^@\s]+@[^@\s]+.[^@\s]+$/.test(email)
-}
+export const nameValidator = (name: string): boolean => name.length > 1
 
-export function nameValidator (name: string): boolean {
-    return name.length > 1
-}
+export const passwordValidator = (pass: string): boolean => pass.length > 4
 
-export function passwordValidator (pass: string): boolean {
-    return pass.length > 4
-}
+export const courseNameValidator = (name: string): boolean => name.length >= 3
 
-export function courseNameValidator (name: string): boolean {
-    return name.length >= 3
-}
+export const courseDescriptionValidator = (name: string): boolean => name.length >= 3
 
-export function courseDescriptionValidator (name: string): boolean {
-    return name.length >= 3
-}
+export const notEmptyValidator = (val: string): boolean => val != null && val.length > 0
