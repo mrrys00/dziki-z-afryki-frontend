@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Alert, Button, CardGroup, Col, Container, Form, Row } from 'react-bootstrap'
 import { type CourseInput, type CourseDate, DAYS_OF_WEEK } from '../../Types/Types.d'
 import { getToken, useAuth } from '../Auth/AuthProvider'
@@ -9,6 +9,8 @@ import CourseFormDate from './CourseFormDate'
 import { DATE_FIELDS_REQUIRED, FIELDS_REQUIRED, INVALID_START_END_TIME }
     from '../../Constants/Errors.d'
 
+import { courseNameValidator, courseDescriptionValidator } from '../Validation/Validator'
+
 // eslint-disable-next-line max-len
 const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateAction<boolean>> }> = ({ setReloadCourse }) => {
     const [showAlert, setShowAlert] = useState(false)
@@ -18,12 +20,30 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
         description: '',
         dates: []
     }))
+    const [inputValidator, setInputValidator] = useState(() => ({
+        name: false,
+        description: false
+    }))
+    const [inputDirty, setInputDirty] = useState(() => ({
+        name: false,
+        description: false
+    }))
     const [currentDate, setCurrentDate] = useState<CourseDate>(() => ({
         weekDay: DAYS_OF_WEEK.MONDAY,
         startTime: '',
         endTime: ''
     }))
     const auth = useAuth()
+
+    useEffect(() => {
+        const result = courseNameValidator(input.name.trim())
+        setInputValidator((s) => ({ ...s, name: result }))
+    }, [input.name])
+
+    useEffect(() => {
+        const result = courseDescriptionValidator(input.description.trim())
+        setInputValidator((s) => ({ ...s, description: result }))
+    }, [input.description])
 
     const addCourse = async (): Promise<any> => {
         return await axios.post(
@@ -36,7 +56,7 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
             {
                 headers:
                     {
-                        Authorization: 'Bearer ' + getToken()
+                        Authorization: `Bearer ${getToken()}`
                     }
             }
         ).catch(error => {
@@ -103,21 +123,29 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
                         <Form.Control
                             required
                             value={input.name}
+                            isInvalid={inputDirty.name && !inputValidator.name}
                             onChange={(val) => {
                                 setInput((s) => ({ ...s, name: val.target.value }))
                             } }
                             type="text"
                             placeholder="Course name" />
+                        <Form.Control.Feedback type="invalid">
+                            Couse name must have between 3 and 150 characters
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Label>Course description</Form.Label>
                     <Form.Control
                         required
                         value={input.description}
+                        isInvalid={inputDirty.description && !inputValidator.description}
                         onChange={(val) => {
                             setInput((s) => ({ ...s, description: val.target.value }))
                         } }
                         type="text"
                         placeholder="Course description" />
+                    <Form.Control.Feedback type="invalid">
+                        Couse description must have between 3 and 150 characters
+                    </Form.Control.Feedback>
                     <Form.Group as={Col}>
                         <Form.Label>Day of week</Form.Label>
                         <Form.Select
@@ -157,7 +185,11 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
                     onClick={handleAddDate}
                     disabled={!(truthyObject(currentDate))}
                 >Add date</Button>
-                <Button variant="success" onClick={handleSubmit}>Add course</Button>
+                <Button
+                    variant="success"
+                    onClick={handleSubmit}
+                    disabled={!(input.dates.length !== 0)}
+                >Add course</Button>
                 <Button variant="danger" onClick={clearForm}>Clear</Button>
             </Form>
             {input.dates.length > 0 &&
