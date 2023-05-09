@@ -11,7 +11,7 @@ import { ROUTE_HOME } from '../../../Constants/Routes.d'
 import { trueObject } from '../../../Utils/Utils'
 import { LOGIN_FAILED } from '../../../Constants/Errors.d'
 
-const emailRegex = /^\S+@\S+\.\S+$/
+import { emailValidator, passwordValidator } from '../../Validation/Validator'
 
 const AuthenticationPage: React.FC = () => {
     const [showAlert, setShowAlert] = useState(false)
@@ -37,12 +37,12 @@ const AuthenticationPage: React.FC = () => {
     const from = state != null ? state.from.pathname : ROUTE_HOME
 
     useEffect(() => {
-        const result = emailRegex.test(input.email.trim())
+        const result = emailValidator(input.email.trim())
         setInputValidator((s) => ({ ...s, email: result }))
     }, [input.email])
 
     useEffect(() => {
-        const result = input.password.trim() !== ''
+        const result = passwordValidator(input.password.trim())
         setInputValidator((s) => ({ ...s, password: result }))
     }, [input.password])
 

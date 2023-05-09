@@ -40,9 +40,9 @@ export interface Course {
     courseId: string
     name: string
     description: string
+    teacher: string
+    students: string[]
     dates: CourseDate[]
-    ownerEmail: string
-    users: string[]
 }
 
 export enum DAYS_OF_WEEK {

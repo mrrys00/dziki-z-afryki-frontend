@@ -15,7 +15,7 @@ import { ROUTE_HOME } from '../../../Constants/Routes.d'
 import { trueObject } from '../../../Utils/Utils'
 import { EMAIL_EXISTS, BASIC_ERROR } from '../../../Constants/Errors.d'
 
-const emailRegex = /^\S+@\S+\.\S+$/
+import { emailValidator, passwordValidator, nameValidator } from '../../Validation/Validator'
 
 const RegisterPage = (): JSX.Element => {
     const [showAlert, setShowAlert] = useState(false)
@@ -30,10 +30,10 @@ const RegisterPage = (): JSX.Element => {
         indexNumber: 0
     }))
     const [inputValidator, setInputValidator] = useState(() => ({
-        firstName: false,
-        lastName: false,
-        email: false,
-        password: false,
+        firstName: true,
+        lastName: true,
+        email: true,
+        password: true,
         indexNumber: false
     }))
     const [inputDirty, setInputDirty] = useState(() => ({
@@ -52,22 +52,22 @@ const RegisterPage = (): JSX.Element => {
     const from = state != null ? state.from.pathname : ROUTE_HOME
 
     useEffect(() => {
-        const result = emailRegex.test(input.email.trim())
+        const result = emailValidator(input.email.trim())
         setInputValidator((s) => ({ ...s, email: result }))
     }, [input.email])
 
     useEffect(() => {
-        const result = input.password.trim() !== ''
+        const result = passwordValidator(input.password.trim())
         setInputValidator((s) => ({ ...s, password: result }))
     }, [input.password])
 
     useEffect(() => {
-        const result = input.firstName.trim() !== ''
+        const result = nameValidator(input.firstName.trim())
         setInputValidator((s) => ({ ...s, firstName: result }))
     }, [input.firstName])
 
     useEffect(() => {
-        const result = input.lastName.trim() !== ''
+        const result = nameValidator(input.lastName.trim())
         setInputValidator((s) => ({ ...s, lastName: result }))
     }, [input.lastName])
 
