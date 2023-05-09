@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { type Course, type CourseDate, DAYS_OF_WEEK } from '../../Types/Types.d'
+import { type Course } from '../../Types/Types.d'
 import axios from 'axios'
 import { PATH_COURSE } from '../../Constants/Paths.d'
 import { getToken } from '../Auth/AuthProvider'
@@ -11,11 +11,8 @@ import { ROUTE_COURSES } from '../../Constants/Routes.d'
 const CoursePage: React.FC = () => {
     const { courseId } = useParams()
     const [course, setCourse] = useState<Course | null>(null)
-    const [dates, setDates] = useState<CourseDate[]>([])
-    const [description, setDescription] = useState('')
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
-    const [reload, setReload] = useState(false)
     const navigate = useNavigate()
 
     const handleDeleteCourse = (): void => {
@@ -34,34 +31,6 @@ const CoursePage: React.FC = () => {
                 setAlertMess(error.response.data)
             })
     }
-
-    useEffect(() => {
-        if (reload) {
-            axios.put(
-                PATH_COURSE + '/' + courseId!,
-                {
-                    dates
-                },
-                {
-                    headers:
-                        {
-                            Authorization: 'Bearer ' + getToken()
-                        }
-                }
-            ).then(resp => {
-                if (resp.status === 200) {
-                    setReload((s) => !s)
-                    setShowAlert(false)
-                    setAlertMess('')
-                }
-            }).catch(error => {
-                setShowAlert(true)
-                console.log(error)
-                setAlertMess(error.response.data)
-            })
-        }
-        setReload(false)
-    }, [dates, description])
 
     useEffect(() => {
         axios.get(
@@ -94,8 +63,6 @@ const CoursePage: React.FC = () => {
                 students: resp.data.students,
                 dates
             }))
-            setDates(dates)
-            setDescription(resp.data.description)
         }).catch(error => {
             return error
         })
@@ -110,10 +77,8 @@ const CoursePage: React.FC = () => {
                 <Card.Body>
                     <Card.Subtitle>Description</Card.Subtitle>
                     <Card.Text>
-                        {description}
+                        {course?.description}
                     </Card.Text>
-                </Card.Body>
-                <Card.Body>
                     <Card.Subtitle>Share code</Card.Subtitle>
                     <Card.Text>{course?.courseId}</Card.Text>
                     <Card.Subtitle>Owner</Card.Subtitle>
@@ -121,7 +86,7 @@ const CoursePage: React.FC = () => {
                 </Card.Body>
             </Card>
             <CardGroup>
-                {dates.map((date, index) => {
+                {course?.dates.map((date, index) => {
                     return (
                         <>
                             <CourseFormDate key={index} date={date}/>
@@ -143,6 +108,9 @@ const CoursePage: React.FC = () => {
                 }
             </CardGroup>
             <Button variant="danger" onClick={handleDeleteCourse}>Delete course</Button>
+            <Alert show={showAlert} variant="danger">
+                {alertMess}
+            </Alert>
         </Container>
     )
 }
