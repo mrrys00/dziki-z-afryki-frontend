@@ -102,6 +102,7 @@ const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) =>
                                             setComments(newComments)
                                         }}
                                         style={{ margin: 'auto' }}
+                                        disabled={true}
                                     />
                                 </Card>
                             </CardGroup>
