@@ -1,5 +1,5 @@
 import React from 'react'
-import { type CourseDate } from '../../Types/Types.d'
+import { type CourseDate } from '../../../Types/Types'
 import { Card } from 'react-bootstrap'
 
 const CourseFormDate: React.FC<{ date: CourseDate }> = ({ date }) => {

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { Alert, Button, CardGroup, Col, Container, Form, Row } from 'react-bootstrap'
-import { type CourseInput, type CourseDate, DAYS_OF_WEEK } from '../../Types/Types.d'
-import { getToken } from '../Auth/AuthProvider'
+import { type CourseInput, type CourseDate, DAYS_OF_WEEK } from '../../../Types/Types.d'
+import { getToken } from '../../Auth/AuthProvider'
 import axios from 'axios'
-import { PATH_COURSE } from '../../Constants/Paths.d'
-import { truthyObject } from '../../Utils/Utils'
+import { PATH_COURSE } from '../../../Constants/Paths.d'
+import { truthyObject } from '../../../Utils/Utils'
 import CourseFormDate from './CourseFormDate'
 import { DATE_FIELDS_REQUIRED, FIELDS_REQUIRED, INVALID_START_END_TIME }
-    from '../../Constants/Errors.d'
+    from '../../../Constants/Errors.d'
 
-import { courseNameValidator, courseDescriptionValidator } from '../Validation/Validator'
+import { courseNameValidator, courseDescriptionValidator } from '../../Validation/Validator'
 
 // eslint-disable-next-line max-len
 const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateAction<boolean>> }> = ({ setReloadCourse }) => {
@@ -143,7 +143,7 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
                             type="text"
                             placeholder="Course name" />
                         <Form.Control.Feedback type="invalid">
-                            Couse name must have between 3 and 150 characters
+                            Course name must have between 3 and 150 characters
                         </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Label>Course description</Form.Label>
@@ -157,7 +157,7 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
                         type="text"
                         placeholder="Course description" />
                     <Form.Control.Feedback type="invalid">
-                        Couse description must have between 3 and 150 characters
+                        Course description must have between 3 and 150 characters
                     </Form.Control.Feedback>
                     <Form.Group as={Col}>
                         <Form.Label>Day of week</Form.Label>
