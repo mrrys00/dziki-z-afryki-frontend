@@ -20,8 +20,7 @@ import axios from 'axios'
 import { ROUTE_AUTHENTICATION, ROUTE_COURSES, ROUTE_HOME, ROUTE_REGISTER }
     from './Constants/Routes.d'
 import Courses from './Components/Course/Courses'
-import RequireAuthTeacher from './Components/Auth/RequireAuthTeacher'
-import CoursePage from './Components/Course/CoursePage'
+import CoursePage from './Components/Course/CoursePage/CoursePage'
 import RequireAuthAny from './Components/Auth/RequireAuthAny'
 axios.defaults.baseURL = 'http://localhost:8080/'
 
@@ -44,7 +43,7 @@ const App: React.FC = () => {
                     <Route path={ROUTE_COURSES} element={<Courses />} />
                 </Route>
 
-                <Route element={<RequireAuthTeacher />}>
+                <Route element={<RequireAuthAny />}>
                     <Route path={ROUTE_COURSES + '/:courseId'} element={<CoursePage />} />
                 </Route>
 

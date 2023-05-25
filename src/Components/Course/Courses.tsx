@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import CourseForm from './CourseForm'
+import CourseForm from './CourseForm/CourseForm'
 import { Card, CardGroup, Container } from 'react-bootstrap'
 import { ROLE_STUDENT, ROLE_TEACHER } from '../../Constants/Auth.d'
 import { getToken, useAuth } from '../Auth/AuthProvider'

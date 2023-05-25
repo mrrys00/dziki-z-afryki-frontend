@@ -1,23 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import { type Course } from '../../Types/Types.d'
+import React, { useState } from 'react'
+import { type Course } from '../../../Types/Types'
 import axios from 'axios'
-import { PATH_COURSE } from '../../Constants/Paths.d'
-import { getToken } from '../Auth/AuthProvider'
-import { Alert, Button, Card, CardGroup, Col, Container, Form } from 'react-bootstrap'
-import { useNavigate, useParams } from 'react-router-dom'
-import CourseFormDate from './CourseFormDate'
-import { ROUTE_COURSES } from '../../Constants/Routes.d'
+import { PATH_COURSE } from '../../../Constants/Paths.d'
+import { getToken } from '../../Auth/AuthProvider'
+import { Alert, Button, Card, CardGroup, Container } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
+import CourseFormDate from '../CourseForm/CourseFormDate'
+import { ROUTE_COURSES } from '../../../Constants/Routes.d'
 
-const CoursePage: React.FC = () => {
-    const { courseId } = useParams()
-    const [course, setCourse] = useState<Course | null>(null)
+const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
     const navigate = useNavigate()
 
     const handleDeleteCourse = (): void => {
         axios.delete(
-            PATH_COURSE + '/' + courseId!, {
+            PATH_COURSE + '/' + course!.courseId, {
                 headers:
                     {
                         Authorization: 'Bearer ' + getToken()
@@ -31,42 +29,6 @@ const CoursePage: React.FC = () => {
                 setAlertMess(error.response.data)
             })
     }
-
-    useEffect(() => {
-        axios.get(
-            `${PATH_COURSE}/${courseId!}`,
-            {
-                headers:
-                    {
-                        Authorization: 'Bearer ' + getToken()
-                    }
-            }).then(resp => {
-            const dates = resp.data.dates.map((date: any) => {
-                const startHour: string = date.startTime[0].toString()
-                const startMinute: string = date.startTime[1].toString()
-                const endHour: string = date.endTime[0].toString()
-                const endMinute: string = date.endTime[1].toString()
-                return {
-                    weekDay: date.weekDay,
-                    startTime: startHour + ':' +
-                        (startMinute.length > 1 ? startMinute : '0' + startMinute),
-                    endTime: endHour + ':' +
-                        (endMinute.length > 1 ? endMinute : '0' + endMinute)
-                }
-            })
-            setCourse((s) => ({
-                ...s,
-                courseId: resp.data.courseId,
-                name: resp.data.name,
-                description: resp.data.description,
-                teacher: resp.data.teacher,
-                students: resp.data.students,
-                dates
-            }))
-        }).catch(error => {
-            return error
-        })
-    }, [])
 
     return (
         <Container>
@@ -115,4 +77,4 @@ const CoursePage: React.FC = () => {
     )
 }
 
-export default CoursePage
+export default CoursePageTeacher

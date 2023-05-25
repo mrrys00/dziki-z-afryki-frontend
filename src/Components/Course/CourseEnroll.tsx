@@ -49,6 +49,7 @@ const CourseEnroll = (): JSX.Element => {
 
         const resp = await enroll()
         if (resp.status === 200) {
+            console.log(resp)
             clearForm()
         } else {
             setShowAlert(true)
@@ -61,6 +62,7 @@ const CourseEnroll = (): JSX.Element => {
         setInput('')
         setAlertMess('')
         setShowAlert(false)
+        setInputValidator(true)
     }
 
     return (
