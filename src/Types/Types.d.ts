@@ -25,6 +25,13 @@ export interface AuthResponse {
 }
 
 export interface CourseDate {
+    dateId: string
+    weekDay: string
+    startTime: string
+    endTime: string
+}
+
+export interface CourseDateInput {
     weekDay: string
     startTime: string
     endTime: string
@@ -33,7 +40,7 @@ export interface CourseDate {
 export interface CourseInput {
     name: string
     description: string
-    dates: CourseDate[]
+    dates: CourseDateInput[]
 }
 
 export interface Course {
@@ -41,7 +48,7 @@ export interface Course {
     name: string
     description: string
     teacher: string
-    students: string[]
+    students: Array<{ studentId: string, email: string }>
     dates: CourseDate[]
 }
 

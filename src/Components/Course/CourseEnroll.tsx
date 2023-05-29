@@ -6,7 +6,8 @@ import axios from 'axios'
 import { PATH_COURSE_ENROLL } from '../../Constants/Paths.d'
 import { getToken } from '../Auth/AuthProvider'
 
-const CourseEnroll = (): JSX.Element => {
+// eslint-disable-next-line max-len
+const CourseEnroll: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateAction<boolean>> }> = ({ setReloadCourse }): JSX.Element => {
     const [input, setInput] = useState('')
     const [inputValidator, setInputValidator] = useState(false)
     const [inputDirty, setInputDirty] = useState(false)
@@ -25,10 +26,8 @@ const CourseEnroll = (): JSX.Element => {
 
     const enroll = async (): Promise<any> => {
         return await axios.post(
-            PATH_COURSE_ENROLL,
-            {
-                courseId: input
-            },
+            `${PATH_COURSE_ENROLL}/${input}`,
+            {},
             {
                 headers:
                     {
@@ -51,6 +50,7 @@ const CourseEnroll = (): JSX.Element => {
         if (resp.status === 200) {
             console.log(resp)
             clearForm()
+            setReloadCourse((s) => !s)
         } else {
             setShowAlert(true)
             console.log(resp)

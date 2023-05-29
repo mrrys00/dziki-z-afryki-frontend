@@ -31,7 +31,7 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
     }
 
     return (
-        <Container>
+        <Container style={{ marginTop: '1rem' }}>
             <Card>
                 <Card.Header>
                     <Card.Title>{course?.name}</Card.Title>
@@ -47,7 +47,7 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
                     <Card.Text>{course?.teacher}</Card.Text>
                 </Card.Body>
             </Card>
-            <CardGroup>
+            <CardGroup style={{ marginTop: '1rem', marginBottom: '1rem' }}>
                 {course?.dates.map((date, index) => {
                     return (
                         <>
@@ -62,7 +62,7 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
                     return (
                         <Card key={index} style={{ minWidth: '20%', flexGrow: 0 }}>
                             <Card.Body>
-                                <Card.Title>{student}</Card.Title>
+                                <Card.Title>{student.email}</Card.Title>
                             </Card.Body>
                         </Card>
                     )

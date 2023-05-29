@@ -29,6 +29,7 @@ const CoursePage: React.FC = () => {
                 const endHour: string = date.endTime[0].toString()
                 const endMinute: string = date.endTime[1].toString()
                 return {
+                    dateId: date.dateId,
                     weekDay: date.weekDay,
                     startTime: startHour + ':' +
                         (startMinute.length > 1 ? startMinute : '0' + startMinute),
