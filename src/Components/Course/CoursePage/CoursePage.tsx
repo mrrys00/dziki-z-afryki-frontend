@@ -15,14 +15,7 @@ const CoursePage: React.FC = () => {
     const auth = useAuth()
 
     useEffect(() => {
-        axios.get(
-            `${PATH_COURSE}/${courseId!}`,
-            {
-                headers:
-                    {
-                        Authorization: 'Bearer ' + getToken()
-                    }
-            }).then(resp => {
+        axios.get(`${PATH_COURSE}/${courseId!}`).then(resp => {
             const dates = resp.data.dates.map((date: any) => {
                 const startHour: string = date.startTime[0].toString()
                 const startMinute: string = date.startTime[1].toString()

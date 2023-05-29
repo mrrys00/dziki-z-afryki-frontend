@@ -14,13 +14,8 @@ const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) =>
 
     useEffect(() => {
         axios.get(
-            `${PATH_COURSE_PREFERENCES}/all`,
-            {
-                headers:
-                    {
-                        Authorization: 'Bearer ' + getToken()
-                    }
-            }).then(resp => {
+            `${PATH_COURSE_PREFERENCES}/all`
+        ).then(resp => {
             const datesIds: string[] = []
             for (const coursePref of resp.data) {
                 if (coursePref.courseId === course?.courseId) {
@@ -50,12 +45,6 @@ const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) =>
             {
                 courseId: course!.courseId,
                 datesIds: dateIds
-            },
-            {
-                headers:
-                    {
-                        Authorization: `Bearer ${getToken()}`
-                    }
             }
         ).catch(error => {
             return error

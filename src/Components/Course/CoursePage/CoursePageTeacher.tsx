@@ -1,12 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react'
 import { type Course } from '../../../Types/Types'
 import axios from 'axios'
-import { PATH_COURSE, PATH_COURSE_RESULTS } from '../../../Constants/Paths.d'
+import { PATH_COURSE } from '../../../Constants/Paths.d'
 import { getToken } from '../../Auth/AuthProvider'
 import { Alert, Button, Card, CardGroup, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import CourseFormDate from '../CourseForm/CourseFormDate'
 import { ROUTE_COURSES } from '../../../Constants/Routes.d'
+
+const calculateCourseRequest = (courseId: string): any => axios({
+    url: `/course-results/calculate/${courseId}`,
+    method: 'post'
+})
 
 const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
     const [showAlert, setShowAlert] = useState(false)
@@ -15,13 +21,7 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
     const header = 'Bearer ' + getToken()
 
     const handleDeleteCourse = (): void => {
-        axios.delete(
-            PATH_COURSE + '/' + course!.courseId, {
-                headers:
-                    {
-                        Authorization: header
-                    }
-            }).then((resp) => {
+        axios.delete(PATH_COURSE + '/' + course!.courseId).then((resp) => {
             navigate(ROUTE_COURSES)
             return resp
         })
@@ -31,20 +31,12 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
             })
     }
 
-    const handleCalculateCourse = (): void => {
-        axios.post(
-            PATH_COURSE_RESULTS + '/' + course!.courseId, {
-                headers:
-                    {
-                        Authorization: `Bearer ${getToken()}`
-                    }
-            }).then((resp) => {
-            return resp
-        })
-            .catch(error => {
-                setShowAlert(true)
-                setAlertMess(error.response.data)
-            })
+    const handleCalculateCourse = async (): Promise<any> => {
+        try {
+            await calculateCourseRequest(course!.courseId)
+        } catch (e) {
+            setShowAlert(true)
+        }
     }
 
     return (

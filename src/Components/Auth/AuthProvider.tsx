@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }): JSX.E
     const [isLoaded, setIsLoaded] = React.useState<boolean>(false)
 
     const signin = (jwt: string, callback?: VoidFunction): void => {
-        axios.defaults.headers.common.Authorization = `${jwt}`
+        axios.defaults.headers.common.Authorization = `Bearer ${jwt}`
         localStorage.setItem(JWT, jwt)
         const newUser = jwtDecode<DecodedUser>(jwt)
         setUser(newUser)
