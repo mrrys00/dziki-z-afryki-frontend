@@ -24,15 +24,15 @@ const Courses: React.FC = () => {
                         Authorization: 'Bearer ' + getToken()
                     }
             }).then(resp => {
-            setCourses(resp.data.filter((course: Course) => course.teacher === auth.user?.sub))
+            setCourses(resp.data)
         }).catch(error => {
             return error
         })
     }, [reloadCourses])
 
     return (
-        <Container>
-            {(auth.user?.role === ROLE_TEACHER) &&
+        <Container style={{ marginTop: '1rem' }}>
+            {(auth.user?.role === ROLE_TEACHER || auth.user?.role === ROLE_STUDENT) &&
                 <CardGroup>
                     {courses.map((course, index) => {
                         return (
@@ -49,8 +49,10 @@ const Courses: React.FC = () => {
                     })}
                 </CardGroup>
             }
-            {auth.user?.role === ROLE_STUDENT && <CourseEnroll />}
-            {auth.user?.role === ROLE_TEACHER && <CourseForm setReloadCourse={setReloadCourses} /> }
+            {auth.user?.role === ROLE_STUDENT &&
+                <CourseEnroll setReloadCourse={setReloadCourses} />}
+            {auth.user?.role === ROLE_TEACHER &&
+                <CourseForm setReloadCourse={setReloadCourses} /> }
         </Container>
     )
 }

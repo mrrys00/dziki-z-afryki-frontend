@@ -1,8 +1,8 @@
 import React from 'react'
-import { type CourseDate } from '../../../Types/Types'
+import { type CourseDateInput } from '../../../Types/Types'
 import { Card } from 'react-bootstrap'
 
-const CourseFormDate: React.FC<{ date: CourseDate }> = ({ date }) => {
+const CourseFormDate: React.FC<{ date: CourseDateInput }> = ({ date }) => {
     return (
         <Card style={{ minWidth: '20%', flexGrow: 0 }}>
             <Card.Body>

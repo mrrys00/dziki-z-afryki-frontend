@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Alert, Button, CardGroup, Col, Container, Form, Row } from 'react-bootstrap'
-import { type CourseInput, type CourseDate, DAYS_OF_WEEK } from '../../../Types/Types.d'
+import { type CourseInput, DAYS_OF_WEEK, type CourseDateInput } from '../../../Types/Types.d'
 import { getToken } from '../../Auth/AuthProvider'
 import axios from 'axios'
 import { PATH_COURSE } from '../../../Constants/Paths.d'
@@ -12,7 +12,7 @@ import { DATE_FIELDS_REQUIRED, FIELDS_REQUIRED, INVALID_START_END_TIME }
 import { courseNameValidator, courseDescriptionValidator } from '../../Validation/Validator'
 
 // eslint-disable-next-line max-len
-const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateAction<boolean>> }> = ({ setReloadCourse }) => {
+const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateAction<boolean>> }> = ({ setReloadCourse }): JSX.Element => {
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
     const [input, setInput] = useState<CourseInput>(() => ({
@@ -28,7 +28,7 @@ const CourseForm: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateActio
         name: false,
         description: false
     }))
-    const [currentDate, setCurrentDate] = useState<CourseDate>(() => ({
+    const [currentDate, setCurrentDate] = useState<CourseDateInput>(() => ({
         weekDay: DAYS_OF_WEEK.MONDAY,
         startTime: '',
         endTime: ''

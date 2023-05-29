@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { type Course } from '../../../Types/Types'
 import { Alert, Button, Card, CardGroup, Container, Form } from 'react-bootstrap'
 import axios from 'axios'
-import { PATH_COURSE } from '../../../Constants/Paths.d'
+import { PATH_COURSE_PREFERENCES } from '../../../Constants/Paths.d'
 import { getToken } from '../../Auth/AuthProvider'
 
 const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) => {
@@ -13,22 +13,43 @@ const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) =>
     const [alertMess, setAlertMess] = useState('')
 
     useEffect(() => {
+        axios.get(
+            `${PATH_COURSE_PREFERENCES}/all`,
+            {
+                headers:
+                    {
+                        Authorization: 'Bearer ' + getToken()
+                    }
+            }).then(resp => {
+            const datesIds: string[] = []
+            for (const coursePref of resp.data) {
+                if (coursePref.courseId === course?.courseId) {
+                    for (const dateId of coursePref.datesIds) {
+                        datesIds.push(dateId)
+                    }
+                }
+            }
+            setSelected(course?.dates.map((date) => datesIds.includes(date.dateId)) ?? [])
+        }).catch(error => {
+            return error
+        })
         setComments(course?.dates.map((date) => '') ?? [])
-        setSelected(course?.dates.map((date) => false) ?? [])
         setLoaded(true)
-    }, [])
+    }, [course])
 
     const clearForm = (): void => {
         setComments(course!.dates.map((date) => ''))
         setSelected(course!.dates.map((date) => false))
+        setShowAlert(false)
+        setAlertMess('')
     }
 
-    const sendPreferences = async (): Promise<any> => {
+    const sendPreferences = async (dateIds: string[] | undefined): Promise<any> => {
         return await axios.post(
-            PATH_COURSE + '/preferences',
+            PATH_COURSE_PREFERENCES,
             {
                 courseId: course!.courseId,
-                dates: selected
+                datesIds: dateIds
             },
             {
                 headers:
@@ -42,13 +63,16 @@ const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) =>
     }
 
     const handleSubmit = async (): Promise<void> => {
-        const selectedDates = course?.dates.filter((date, index) => selected[index])
-        console.log(selectedDates)
+        const dateIds = course?.dates
+            .filter((date, index) => selected[index])
+            .map((date) => date.dateId)
+        console.log(dateIds)
         console.log(comments)
 
-        const resp = await sendPreferences()
+        const resp = await sendPreferences(dateIds)
         if (resp.status === 200) {
-            clearForm()
+            setShowAlert(false)
+            setAlertMess('')
         } else {
             setShowAlert(true)
             console.log(resp)
