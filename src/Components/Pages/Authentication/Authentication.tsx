@@ -60,11 +60,7 @@ const AuthenticationPage: React.FC = () => {
         const resp = await loginUser()
 
         if (resp.status === 200) {
-            auth.signin(resp.data.jwt, () => {
-                navigate(from, { replace: true })
-            })
-            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-            axios.defaults.headers.common.Authorization = 'Bearer ' + resp.data.jwt
+            auth.signin(resp.data.jwt, () => { navigate(from, { replace: true }) })
         } else {
             setShowAlert(true)
             console.log(resp)
