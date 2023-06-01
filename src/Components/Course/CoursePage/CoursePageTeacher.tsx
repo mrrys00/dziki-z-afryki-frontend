@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { type Course } from '../../../Types/Types'
 import axios from 'axios'
-import { PATH_COURSE } from '../../../Constants/Paths.d'
+import { PATH_COURSE, PATH_COURSE_RESULTS } from '../../../Constants/Paths.d'
 import { getToken } from '../../Auth/AuthProvider'
 import { Alert, Button, Card, CardGroup, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
@@ -14,12 +14,20 @@ const calculateCourseRequest = (courseId: string): any => axios({
     method: 'post'
 })
 
+const getCourseResultsRequest = (courseId: string): any => axios({
+    url: `/course-results/${courseId}`,
+    method: 'get'
+})
+
 const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
     const navigate = useNavigate()
-    const header = 'Bearer ' + getToken()
+    const [loaded, setLoaded] = useState<boolean>(false)
+    const [courseId] = useState<string>(course!.courseId)
+    let isCalculated = false
 
+    isCalculated = true
     const handleDeleteCourse = (): void => {
         axios.delete(PATH_COURSE + '/' + course!.courseId).then((resp) => {
             navigate(ROUTE_COURSES)
@@ -39,6 +47,30 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
         }
     }
 
+    useEffect(() => {
+        // getCourseResultsRequest(courseId)
+        axios.get(
+            // `${PATH_COURSE_RESULTS}/${courseId}`
+            `${PATH_COURSE_RESULTS}/${course!.courseId}`
+        ).then(resp => {
+            if (resp.status === 200) {
+                isCalculated = true
+            }
+            // const datesIds: string[] = []
+            // for (const coursePref of resp.data) {
+            //     if (coursePref.courseId === course?.courseId) {
+            //         for (const dateId of coursePref.datesIds) {
+            //             datesIds.push(dateId)
+            //         }
+            //     }
+            // }
+            // setSelected(course?.dates.map((date) => datesIds.includes(date.dateId)) ?? [])
+        }).catch(error => {
+            return error
+        })
+        setLoaded(true)
+    })
+
     return (
         <Container style={{ marginTop: '1rem' }}>
             <Card>
@@ -56,6 +88,7 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
                     <Card.Text>{course?.teacher}</Card.Text>
                 </Card.Body>
             </Card>
+            {loaded && !isCalculated &&
             <CardGroup style={{ marginTop: '1rem', marginBottom: '1rem' }}>
                 {course?.dates.map((date, index) => {
                     return (
@@ -65,8 +98,8 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
                     )
                 })
                 }
-            </CardGroup>
-            <CardGroup>
+            </CardGroup>}
+            {loaded && !isCalculated && <CardGroup>
                 {course?.students.map((student, index) => {
                     return (
                         <Card key={index} style={{ minWidth: '20%', flexGrow: 0 }}>
@@ -77,9 +110,36 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
                     )
                 })
                 }
-            </CardGroup>
+            </CardGroup>}
+
+            {loaded && isCalculated &&
+            <CardGroup style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+                {course?.dates.map((date, index) => {
+                    return (
+                        <>
+                            <Button> TO DO </Button>
+                            <CourseFormDate key={index} date={date}/>
+                        </>
+                    )
+                })
+                }
+            </CardGroup>}
+            {loaded && isCalculated && <CardGroup>
+                {course?.students.map((student, index) => {
+                    return (
+                        <Card key={index} style={{ minWidth: '20%', flexGrow: 0 }}>
+                            <Button> TO DO </Button>
+                            <Card.Body>
+                                <Card.Title>{student.email}</Card.Title>
+                            </Card.Body>
+                        </Card>
+                    )
+                })
+                }
+            </CardGroup>}
             <Button variant="danger" onClick={handleDeleteCourse}>Delete course</Button>
-            <Button variant="success" onClick={handleCalculateCourse}>Calculate course</Button>
+            <Button variant="success" disabled={isCalculated}
+                onClick={handleCalculateCourse}>Calculate course</Button>
             <Alert show={showAlert} variant="danger">
                 {alertMess}
             </Alert>

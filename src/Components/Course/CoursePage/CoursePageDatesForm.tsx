@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { type Course } from '../../../Types/Types'
+import { DecodedUser, type Course } from '../../../Types/Types'
 import { Alert, Button, Card, CardGroup, Container, Form } from 'react-bootstrap'
 import axios from 'axios'
-import { PATH_COURSE_PREFERENCES } from '../../../Constants/Paths.d'
+import { PATH_COURSE_PREFERENCES, PATH_COURSE_RESULTS } from '../../../Constants/Paths.d'
 import { getToken } from '../../Auth/AuthProvider'
+import jwtDecode from 'jwt-decode'
+import { error } from 'console'
 
 const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) => {
     const [comments, setComments] = useState<string[]>([])
@@ -31,6 +33,18 @@ const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) =>
         setComments(course?.dates.map((date) => '') ?? [])
         setLoaded(true)
     }, [course])
+
+    // useEffect(() => {
+    //     axios.get(
+    //         `${PATH_COURSE_RESULTS}/${course?.courseId}`
+    //     ).then(resp => {
+    //         // const userId: string = jwtDecode(getToken())
+    //         const user: DecodedUser = jwtDecode<DecodedUser>(getToken())
+    //         const userEmail: string = user.email
+    //     }).catch(error => {
+    //         return error
+    //     })
+    // })
 
     const clearForm = (): void => {
         setComments(course!.dates.map((date) => ''))

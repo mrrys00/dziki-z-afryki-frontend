@@ -52,6 +52,12 @@ export interface Course {
     dates: CourseDate[]
 }
 
+export interface ResultDatesMapping {
+    dateToStudents: {
+        dateId: string[]
+    }
+}
+
 export enum DAYS_OF_WEEK {
     MONDAY = 'MONDAY',
     TUESDAY = 'TUESDAY',
