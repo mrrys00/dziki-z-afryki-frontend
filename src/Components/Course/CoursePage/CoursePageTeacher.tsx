@@ -4,10 +4,11 @@ import { type Course } from '../../../Types/Types'
 import axios from 'axios'
 import { PATH_COURSE, PATH_COURSE_RESULTS } from '../../../Constants/Paths.d'
 import { getToken } from '../../Auth/AuthProvider'
-import { Alert, Button, Card, CardGroup, Container } from 'react-bootstrap'
+import { Alert, Button, Card, CardGroup, Container, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import CourseFormDate from '../CourseForm/CourseFormDate'
 import { ROUTE_COURSES } from '../../../Constants/Routes.d'
+import { wait } from '@testing-library/user-event/dist/utils'
 
 const calculateCourseRequest = (courseId: string): any => axios({
     url: `/course-results/calculate/${courseId}`,
@@ -24,10 +25,12 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
     const [alertMess, setAlertMess] = useState('')
     const navigate = useNavigate()
     const [loaded, setLoaded] = useState<boolean>(false)
-    const [courseId] = useState<string>(course!.courseId)
-    let isCalculated = false
+    const [dateStudents, setDateStudents] = useState(new Map<string, string[]>())
+    const [isCalculated, setIsCalculated] = useState<boolean>(false)
+    const datesStudents = new Map<string, string[]>([])
 
-    isCalculated = true
+    const [studentIDEmailMap, setStudentIDEmailMap] = useState<Map<string, string>>()
+
     const handleDeleteCourse = (): void => {
         axios.delete(PATH_COURSE + '/' + course!.courseId).then((resp) => {
             navigate(ROUTE_COURSES)
@@ -48,28 +51,41 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
     }
 
     useEffect(() => {
-        // getCourseResultsRequest(courseId)
+        if (course === null) {
+            return
+        }
         axios.get(
-            // `${PATH_COURSE_RESULTS}/${courseId}`
-            `${PATH_COURSE_RESULTS}/${course!.courseId}`
+            `${PATH_COURSE_RESULTS}/${course.courseId}`
         ).then(resp => {
+            console.log(resp.data)
             if (resp.status === 200) {
-                isCalculated = true
+                setIsCalculated(true)
             }
-            // const datesIds: string[] = []
-            // for (const coursePref of resp.data) {
-            //     if (coursePref.courseId === course?.courseId) {
-            //         for (const dateId of coursePref.datesIds) {
-            //             datesIds.push(dateId)
-            //         }
-            //     }
-            // }
-            // setSelected(course?.dates.map((date) => datesIds.includes(date.dateId)) ?? [])
+            const datesIds: string[] = []
+            // const datesStudents = new Map<string, string[]>([])
+            datesStudents.set('aaa', ['aaa'])
+            for (const coursePref of resp.data) {
+                if (coursePref.courseId === course?.courseId) {
+                    for (const dateId of coursePref.datesIds) {
+                        datesIds.push(dateId)
+                        // tutaj poległem z mapowaniem - mapa wyświetla się jako undefined
+                        datesStudents.set(dateId.toString(), [])
+                        for (const studentObj of course.students) {
+                            if (resp.data[dateId].indexOf(studentObj.studentId) > -1) {
+                                datesStudents.get(dateId)?.push(studentObj.email)
+                            }
+                        }
+                    }
+                }
+            }
         }).catch(error => {
             return error
         })
         setLoaded(true)
-    })
+    }, [course])
+
+    // useEffect(() => { console.log(course) }, [course])
+    useEffect(() => { console.log(datesStudents) }, [datesStudents])
 
     return (
         <Container style={{ marginTop: '1rem' }}>
@@ -88,6 +104,17 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
                     <Card.Text>{course?.teacher}</Card.Text>
                 </Card.Body>
             </Card>
+            {loaded && !isCalculated && <Card style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+                <Card.Subtitle
+                    style={{
+                        minWidth: '100%',
+                        fontSize: 18,
+                        marginTop: '1rem',
+                        marginBottom: '1rem'
+                    }}>
+                    Course dates
+                </Card.Subtitle>
+            </Card>}
             {loaded && !isCalculated &&
             <CardGroup style={{ marginTop: '1rem', marginBottom: '1rem' }}>
                 {course?.dates.map((date, index) => {
@@ -99,7 +126,13 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
                 })
                 }
             </CardGroup>}
-            {loaded && !isCalculated && <CardGroup>
+            {loaded && !isCalculated && <Card>
+                <Card.Subtitle style={{ minWidth: '100%', marginTop: '1rem', fontSize: 18 }}>
+                    Enrolled students
+                </Card.Subtitle>
+            </Card>}
+            {loaded && !isCalculated &&
+            <CardGroup>
                 {course?.students.map((student, index) => {
                     return (
                         <Card key={index} style={{ minWidth: '20%', flexGrow: 0 }}>
@@ -113,30 +146,30 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
             </CardGroup>}
 
             {loaded && isCalculated &&
-            <CardGroup style={{ marginTop: '1rem', marginBottom: '1rem' }}>
-                {course?.dates.map((date, index) => {
-                    return (
-                        <>
-                            <Button> TO DO </Button>
-                            <CourseFormDate key={index} date={date}/>
-                        </>
-                    )
-                })
-                }
-            </CardGroup>}
-            {loaded && isCalculated && <CardGroup>
-                {course?.students.map((student, index) => {
-                    return (
-                        <Card key={index} style={{ minWidth: '20%', flexGrow: 0 }}>
-                            <Button> TO DO </Button>
-                            <Card.Body>
-                                <Card.Title>{student.email}</Card.Title>
-                            </Card.Body>
-                        </Card>
-                    )
-                })
-                }
-            </CardGroup>}
+            <Card style={{ minWidth: '33%', flexGrow: 0 }}>
+                <Card.Text style={{ margin: 'auto', fontSize: 24 }}>
+                    Enrollment has finished
+                </Card.Text>
+            </Card>}
+            {loaded && isCalculated && course?.dates.map((date, index) => {
+                return (
+                    <Form.Group key={index}>
+                        <CardGroup>
+                            <Card style={{ minWidth: '33%', flexGrow: 0 }}>
+                                <Card.Text style={{ margin: 'auto' }}>
+                                    {`${date.weekDay} ${date.startTime} - ${date.endTime}`}
+                                </Card.Text>
+                            </Card>
+                            <Card style={{ minWidth: '67%', flexGrow: 0 }}>
+                                <Card.Text style={{ margin: 'auto' }}>
+                                    {`${datesStudents?.get(date.dateId)?.toString()}`}
+                                </Card.Text>
+                            </Card>
+                        </CardGroup>
+                    </Form.Group>
+                )
+            })
+            }
             <Button variant="danger" onClick={handleDeleteCourse}>Delete course</Button>
             <Button variant="success" disabled={isCalculated}
                 onClick={handleCalculateCourse}>Calculate course</Button>
