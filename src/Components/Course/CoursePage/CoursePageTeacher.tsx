@@ -26,6 +26,7 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
     const navigate = useNavigate()
     const [loaded, setLoaded] = useState<boolean>(false)
     const [dateStudents, setDateStudents] = useState(new Map<string, string[]>())
+    const [studentEmails, setStudentEmails] = useState<string[]>([])
     const [isCalculated, setIsCalculated] = useState<boolean>(false)
     const datesStudents = new Map<string, string[]>([])
 
