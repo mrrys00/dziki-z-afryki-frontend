@@ -1,0 +1,32 @@
+useEffect(() => {
+        axios.get(
+            `${PATH_COURSE_RESULTS}/${course?.courseId}`
+        ).then(resp => {
+            console.log(resp.data)
+            if (resp.status === 200) {
+                setIsCalculated(true)
+            }
+            const datesIds: string[] = []
+            // const datesStudents = new Map<string, string[]>([])
+            datesStudents.set('aaa', ['aaa'])
+            for (const coursePref of resp.data) {
+                if (coursePref.courseId === course?.courseId) {
+                    for (const dateId of coursePref.datesIds) {
+                        datesIds.push(dateId)
+                        // tutaj poległem z mapowaniem - mapa wyświetla się jako undefined
+                        // datesStudents.set(dateId.toString(), [])
+                        // for (const studentObj of course.students) {
+                        //     if (resp.data[dateId].indexOf(studentObj.studentId) > -1) {
+                        //         datesStudents.get(dateId)?.push(studentObj.email)
+                        //     }
+                        // }
+                    }
+                }
+            }
+            setDateStudents(datesStudents)
+            printStudentsResults(dateStudents.get('aaa'))
+        }).catch(error => {
+            return error
+        })
+        setLoaded(true)
+    }, [course])

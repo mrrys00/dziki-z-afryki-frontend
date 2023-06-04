@@ -3,7 +3,7 @@ import { Card, Container } from 'react-bootstrap'
 import { type Course } from '../../../Types/Types'
 import CoursePageDatesForm from './CoursePageDatesForm'
 
-const CoursePageStudent: React.FC<{ course: Course | null }> = ({ course }) => {
+const CoursePageStudent: React.FC<{ course: Course }> = ({ course }) => {
     return (
         <Container style={{ marginTop: '1rem' }}>
             <Card>

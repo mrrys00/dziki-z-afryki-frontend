@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react'
-import { type Course } from '../../../Types/Types'
+import { type Course, type ResultDatesMapping } from '../../../Types/Types'
 import axios from 'axios'
 import { PATH_COURSE, PATH_COURSE_RESULTS } from '../../../Constants/Paths.d'
 import { getToken } from '../../Auth/AuthProvider'
 import { Alert, Button, Card, CardGroup, Container, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import CourseFormDate from '../CourseForm/CourseFormDate'
+import Loading from '../../Auth/Loading'
 import { ROUTE_COURSES } from '../../../Constants/Routes.d'
 import { wait } from '@testing-library/user-event/dist/utils'
 
@@ -20,20 +22,39 @@ const getCourseResultsRequest = (courseId: string): any => axios({
     method: 'get'
 })
 
-const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
+const getCourseRequest = (courseId: string): any => axios({
+    url: `${PATH_COURSE}/${courseId}`,
+    method: 'get'
+})
+
+const printStudentsResults = (studentsIds: string[] | undefined): string => {
+    if (studentsIds !== undefined) {
+        console.log(`student IDs : ${studentsIds?.toString()}`)
+        return studentsIds.toString()
+    }
+    console.log('student IDs is undefined')
+    return 'no students'
+}
+
+interface Props {
+    course: Course
+}
+
+const CoursePageTeacher: React.FC<Props> = (props: Props) => {
+    const [course, setCourse] = useState(props.course)
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
     const navigate = useNavigate()
-    const [loaded, setLoaded] = useState<boolean>(false)
+    const [loaded, setLoaded] = useState<boolean>(true)
     const [dateStudents, setDateStudents] = useState(new Map<string, string[]>())
     const [studentEmails, setStudentEmails] = useState<string[]>([])
-    const [isCalculated, setIsCalculated] = useState<boolean>(false)
+    const [isCalculated, setIsCalculated] = useState<boolean>(true)
     const datesStudents = new Map<string, string[]>([])
 
     const [studentIDEmailMap, setStudentIDEmailMap] = useState<Map<string, string>>()
 
     const handleDeleteCourse = (): void => {
-        axios.delete(PATH_COURSE + '/' + course!.courseId).then((resp) => {
+        axios.delete(PATH_COURSE + '/' + course.courseId).then((resp) => {
             navigate(ROUTE_COURSES)
             return resp
         })
@@ -45,49 +66,55 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
 
     const handleCalculateCourse = async (): Promise<any> => {
         try {
-            await calculateCourseRequest(course!.courseId)
+            await calculateCourseRequest(course.courseId)
         } catch (e) {
             setShowAlert(true)
         }
     }
 
-    useEffect(() => {
-        if (course === null) {
-            return
+    const handleResults = async (): Promise<any> => {
+        try {
+            const resp = await getCourseResultsRequest(course.courseId)
+            const respData: ResultDatesMapping = resp.data
+            console.log(respData)
+            // datesStudents.set('aaa', ['aaa'])
+
+            // for (const coursePref of respData.dateToStudents) {
+            //     if (coursePref.courseId === course?.courseId) {
+            //         for (const dateId of coursePref.datesIds) {
+            //             datesIds.push(dateId)
+            //             // tutaj poległem z mapowaniem - mapa wyświetla się jako undefined
+            //             // datesStudents.set(dateId.toString(), [])
+            //             // for (const studentObj of course.students) {
+            //             //     if (resp.data[dateId].indexOf(studentObj.studentId) > -1) {
+            //             //         datesStudents.get(dateId)?.push(studentObj.email)
+            //             //     }
+            //             // }
+            //         }
+            //     }
+            // }
+            setDateStudents(respData.dateToStudents)
+            setCourse(getCourseRequest(course.courseId).data)
+            // printStudentsResults(dateStudents.get('aaa'))
+        } catch (e) {
+            setShowAlert(true)
         }
-        axios.get(
-            `${PATH_COURSE_RESULTS}/${course.courseId}`
-        ).then(resp => {
-            console.log(resp.data)
-            if (resp.status === 200) {
-                setIsCalculated(true)
-            }
-            const datesIds: string[] = []
-            // const datesStudents = new Map<string, string[]>([])
-            datesStudents.set('aaa', ['aaa'])
-            for (const coursePref of resp.data) {
-                if (coursePref.courseId === course?.courseId) {
-                    for (const dateId of coursePref.datesIds) {
-                        datesIds.push(dateId)
-                        // tutaj poległem z mapowaniem - mapa wyświetla się jako undefined
-                        datesStudents.set(dateId.toString(), [])
-                        for (const studentObj of course.students) {
-                            if (resp.data[dateId].indexOf(studentObj.studentId) > -1) {
-                                datesStudents.get(dateId)?.push(studentObj.email)
-                            }
-                        }
-                    }
-                }
-            }
-        }).catch(error => {
-            return error
-        })
-        setLoaded(true)
-    }, [course])
+    }
+
+    useEffect(async () => {
+        if (course.isCalculated) {
+            await handleResults()
+        }
+    }, [])
 
     // useEffect(() => { console.log(course) }, [course])
-    useEffect(() => { console.log(datesStudents) }, [datesStudents])
+    useEffect(() => {
+        console.log(datesStudents)
+    }, [datesStudents])
 
+    // if (!loaded) {
+    //     return <Loading />
+    // }
     return (
         <Container style={{ marginTop: '1rem' }}>
             <Card>
@@ -163,7 +190,8 @@ const CoursePageTeacher: React.FC<{ course: Course | null }> = ({ course }) => {
                             </Card>
                             <Card style={{ minWidth: '67%', flexGrow: 0 }}>
                                 <Card.Text style={{ margin: 'auto' }}>
-                                    {`${datesStudents?.get(date.dateId)?.toString()}`}
+                                    {`${printStudentsResults(dateStudents.get(date.dateId))}`}
+                                    {/* {`${printStudentsResults(['aaa'])}`} */}
                                 </Card.Text>
                             </Card>
                         </CardGroup>

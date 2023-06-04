@@ -11,7 +11,7 @@ import { type Course } from '../../../Types/Types'
 
 const CoursePage: React.FC = () => {
     const { courseId } = useParams()
-    const [course, setCourse] = useState<Course | null>(null)
+    const [course, setCourse] = useState<Course>()
     const auth = useAuth()
 
     useEffect(() => {
@@ -35,6 +35,7 @@ const CoursePage: React.FC = () => {
                 courseId: resp.data.courseId,
                 name: resp.data.name,
                 description: resp.data.description,
+                isCalculated: resp.data.isCalculated,
                 teacher: resp.data.teacher,
                 students: resp.data.students,
                 dates
@@ -46,13 +47,13 @@ const CoursePage: React.FC = () => {
 
     if (auth.user?.role === ROLE_TEACHER) {
         return (
-            <CoursePageTeacher course={course}/>
+            <CoursePageTeacher course={course!}/>
         )
     }
 
     if (auth.user?.role === ROLE_STUDENT) {
         return (
-            <CoursePageStudent course={course}/>
+            <CoursePageStudent course={course!}/>
         )
     }
 

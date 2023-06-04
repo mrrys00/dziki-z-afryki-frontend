@@ -47,15 +47,14 @@ export interface Course {
     courseId: string
     name: string
     description: string
+    isCalculated: boolean
     teacher: string
     students: Array<{ studentId: string, email: string }>
     dates: CourseDate[]
 }
 
 export interface ResultDatesMapping {
-    dateToStudents: {
-        dateId: string[]
-    }
+    dateToStudents: Map<string, string[]>
 }
 
 export enum DAYS_OF_WEEK {
