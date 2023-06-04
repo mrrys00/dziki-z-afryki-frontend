@@ -72,7 +72,7 @@ const CoursePageTeacher: React.FC<Props> = (props: Props) => {
         }
     }
 
-    const handleResults = async (): Promise<any> => {
+    const handleResults = async (): Promise<void> => {
         try {
             const resp = await getCourseResultsRequest(course.courseId)
             const respData: ResultDatesMapping = resp.data
@@ -93,18 +93,24 @@ const CoursePageTeacher: React.FC<Props> = (props: Props) => {
             //         }
             //     }
             // }
-            setDateStudents(respData.dateToStudents)
+
+            // first get new course so that we can get students emails from it
             setCourse(getCourseRequest(course.courseId).data)
+            // then refresh page with results
+            setDateStudents(respData.dateToStudents)
             // printStudentsResults(dateStudents.get('aaa'))
         } catch (e) {
             setShowAlert(true)
         }
     }
 
-    useEffect(async () => {
-        if (course.isCalculated) {
-            await handleResults()
+    useEffect(() => {
+        const fetchData = async (): Promise<any> => {
+            if (course.isCalculated === true) {
+                await handleResults()
+            }
         }
+        fetchData().catch((e) => { setShowAlert(true) })
     }, [])
 
     // useEffect(() => { console.log(course) }, [course])
