@@ -6,7 +6,7 @@ import axios from 'axios'
 import { PATH_COURSE, PATH_COURSE_RESULTS } from '../../../Constants/Paths.d'
 import { getToken } from '../../Auth/AuthProvider'
 import { Alert, Button, Card, CardGroup, Container, Form } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import CourseFormDate from '../CourseForm/CourseFormDate'
 import Loading from '../../Auth/Loading'
 import { ROUTE_COURSES } from '../../../Constants/Routes.d'
@@ -27,31 +27,24 @@ const getCourseRequest = (courseId: string): any => axios({
     method: 'get'
 })
 
-const printStudentsResults = (studentsIds: string[] | undefined): string => {
-    if (studentsIds !== undefined) {
-        console.log(`student IDs : ${studentsIds?.toString()}`)
-        return studentsIds.toString()
-    }
-    console.log('student IDs is undefined')
-    return 'no students'
-}
-
-interface Props {
-    course: Course
-}
-
-const CoursePageTeacher: React.FC<Props> = (props: Props) => {
-    const [course, setCourse] = useState(props.course)
+const CoursePageTeacher: React.FC = () => {
+    const courseId = useParams().courseId as string
+    const navigate = useNavigate()
+    const [course, setCourse] = useState<Course>(
+        {
+            courseId: '',
+            name: '',
+            description: '',
+            isCalculated: false,
+            teacher: '',
+            students: [],
+            dates: []
+        }
+    )
     const [showAlert, setShowAlert] = useState(false)
     const [alertMess, setAlertMess] = useState('')
-    const navigate = useNavigate()
     const [loaded, setLoaded] = useState<boolean>(true)
-    const [dateStudents, setDateStudents] = useState(new Map<string, string[]>())
-    const [studentEmails, setStudentEmails] = useState<string[]>([])
-    const [isCalculated, setIsCalculated] = useState<boolean>(true)
-    const datesStudents = new Map<string, string[]>([])
-
-    const [studentIDEmailMap, setStudentIDEmailMap] = useState<Map<string, string>>()
+    const [results, setResults] = useState<Map<string, string[]>>(new Map())
 
     const handleDeleteCourse = (): void => {
         axios.delete(PATH_COURSE + '/' + course.courseId).then((resp) => {
@@ -72,73 +65,84 @@ const CoursePageTeacher: React.FC<Props> = (props: Props) => {
         }
     }
 
+    const handleGetCourse = async (): Promise<boolean> => {
+        try {
+            const resp = await getCourseRequest(courseId)
+            const responseCourse: Course = resp.data
+            console.log(responseCourse)
+            setCourse({
+                courseId: responseCourse.courseId,
+                name: responseCourse.name,
+                description: responseCourse.description,
+                isCalculated: responseCourse.isCalculated,
+                teacher: responseCourse.teacher,
+                students: [...responseCourse.students],
+                dates: [...responseCourse.dates]
+            })
+            return responseCourse.isCalculated
+        } catch (e) {
+            console.log(e)
+            return false
+        }
+    }
+
     const handleResults = async (): Promise<void> => {
         try {
-            const resp = await getCourseResultsRequest(course.courseId)
-            const respData: ResultDatesMapping = resp.data
-            console.log(respData)
-            // datesStudents.set('aaa', ['aaa'])
+            const resp = await getCourseResultsRequest(courseId)
+            const respData = resp.data
+            console.log(respData.dateToStudents)
 
-            // for (const coursePref of respData.dateToStudents) {
-            //     if (coursePref.courseId === course?.courseId) {
-            //         for (const dateId of coursePref.datesIds) {
-            //             datesIds.push(dateId)
-            //             // tutaj poległem z mapowaniem - mapa wyświetla się jako undefined
-            //             // datesStudents.set(dateId.toString(), [])
-            //             // for (const studentObj of course.students) {
-            //             //     if (resp.data[dateId].indexOf(studentObj.studentId) > -1) {
-            //             //         datesStudents.get(dateId)?.push(studentObj.email)
-            //             //     }
-            //             // }
-            //         }
-            //     }
-            // }
-
-            // first get new course so that we can get students emails from it
-            setCourse(getCourseRequest(course.courseId).data)
-            // then refresh page with results
-            setDateStudents(respData.dateToStudents)
-            // printStudentsResults(dateStudents.get('aaa'))
+            setResults(() => {
+                const results = new Map<string, string[]>()
+                Object.entries(respData.dateToStudents).forEach(([key, value]) => results.set(key, value as string[]))
+                return results
+            })
         } catch (e) {
             setShowAlert(true)
         }
     }
 
+    const mapStudentIdToEmail = (dateId: string): string => {
+        const studentIds = results.get(dateId)
+        if (studentIds === undefined) {
+            return ''
+        }
+        return studentIds.map((studentId) => course.students.find((s) => s.studentId === studentId)?.email).toString()
+    }
+
     useEffect(() => {
         const fetchData = async (): Promise<any> => {
-            if (course.isCalculated === true) {
+            const isCalculated = await handleGetCourse()
+            if (isCalculated) {
                 await handleResults()
             }
         }
         fetchData().catch((e) => { setShowAlert(true) })
+        setLoaded(true)
     }, [])
 
-    // useEffect(() => { console.log(course) }, [course])
-    useEffect(() => {
-        console.log(datesStudents)
-    }, [datesStudents])
+    if (!loaded) {
+        return <Loading />
+    }
 
-    // if (!loaded) {
-    //     return <Loading />
-    // }
     return (
         <Container style={{ marginTop: '1rem' }}>
             <Card>
                 <Card.Header>
-                    <Card.Title>{course?.name}</Card.Title>
+                    <Card.Title>{course.name}</Card.Title>
                 </Card.Header>
                 <Card.Body>
                     <Card.Subtitle>Description</Card.Subtitle>
                     <Card.Text>
-                        {course?.description}
+                        {course.description}
                     </Card.Text>
                     <Card.Subtitle>Share code</Card.Subtitle>
-                    <Card.Text>{course?.courseId}</Card.Text>
+                    <Card.Text>{course.courseId}</Card.Text>
                     <Card.Subtitle>Owner</Card.Subtitle>
-                    <Card.Text>{course?.teacher}</Card.Text>
+                    <Card.Text>{course.teacher}</Card.Text>
                 </Card.Body>
             </Card>
-            {loaded && !isCalculated && <Card style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+            {loaded && !course.isCalculated && <Card style={{ marginTop: '1rem', marginBottom: '1rem' }}>
                 <Card.Subtitle
                     style={{
                         minWidth: '100%',
@@ -149,9 +153,9 @@ const CoursePageTeacher: React.FC<Props> = (props: Props) => {
                     Course dates
                 </Card.Subtitle>
             </Card>}
-            {loaded && !isCalculated &&
+            {loaded && !course.isCalculated &&
             <CardGroup style={{ marginTop: '1rem', marginBottom: '1rem' }}>
-                {course?.dates.map((date, index) => {
+                {course.dates.map((date, index) => {
                     return (
                         <>
                             <CourseFormDate key={index} date={date}/>
@@ -160,14 +164,14 @@ const CoursePageTeacher: React.FC<Props> = (props: Props) => {
                 })
                 }
             </CardGroup>}
-            {loaded && !isCalculated && <Card>
+            {loaded && !course.isCalculated && <Card>
                 <Card.Subtitle style={{ minWidth: '100%', marginTop: '1rem', fontSize: 18 }}>
                     Enrolled students
                 </Card.Subtitle>
             </Card>}
-            {loaded && !isCalculated &&
+            {loaded && !course.isCalculated &&
             <CardGroup>
-                {course?.students.map((student, index) => {
+                {course.students.map((student, index) => {
                     return (
                         <Card key={index} style={{ minWidth: '20%', flexGrow: 0 }}>
                             <Card.Body>
@@ -179,34 +183,30 @@ const CoursePageTeacher: React.FC<Props> = (props: Props) => {
                 }
             </CardGroup>}
 
-            {loaded && isCalculated &&
+            {loaded && course.isCalculated &&
             <Card style={{ minWidth: '33%', flexGrow: 0 }}>
                 <Card.Text style={{ margin: 'auto', fontSize: 24 }}>
                     Enrollment has finished
                 </Card.Text>
             </Card>}
-            {loaded && isCalculated && course?.dates.map((date, index) => {
+            {loaded && course.isCalculated && course.dates.map((date) => {
                 return (
-                    <Form.Group key={index}>
+                    <Form.Group key={date.dateId}>
                         <CardGroup>
                             <Card style={{ minWidth: '33%', flexGrow: 0 }}>
                                 <Card.Text style={{ margin: 'auto' }}>
                                     {`${date.weekDay} ${date.startTime} - ${date.endTime}`}
                                 </Card.Text>
                             </Card>
-                            <Card style={{ minWidth: '67%', flexGrow: 0 }}>
-                                <Card.Text style={{ margin: 'auto' }}>
-                                    {`${printStudentsResults(dateStudents.get(date.dateId))}`}
-                                    {/* {`${printStudentsResults(['aaa'])}`} */}
-                                </Card.Text>
-                            </Card>
+                            {
+                                mapStudentIdToEmail(date.dateId)
+                            }
                         </CardGroup>
                     </Form.Group>
                 )
-            })
-            }
+            })}
             <Button variant="danger" onClick={handleDeleteCourse}>Delete course</Button>
-            <Button variant="success" disabled={isCalculated}
+            <Button variant="success" disabled={course.isCalculated}
                 onClick={handleCalculateCourse}>Calculate course</Button>
             <Alert show={showAlert} variant="danger">
                 {alertMess}
