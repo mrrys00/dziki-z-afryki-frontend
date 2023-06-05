@@ -60,6 +60,7 @@ const CoursePageTeacher: React.FC = () => {
     const handleCalculateCourse = async (): Promise<any> => {
         try {
             await calculateCourseRequest(course.courseId)
+            navigate(PATH_COURSE + '/' + course.courseId)
         } catch (e) {
             setShowAlert(true)
         }
@@ -107,7 +108,8 @@ const CoursePageTeacher: React.FC = () => {
         if (studentIds === undefined) {
             return ''
         }
-        return studentIds.map((studentId) => course.students.find((s) => s.studentId === studentId)?.email).toString()
+        const mappedIDs = studentIds.map((studentId) => course.students.find((s) => s.studentId === studentId)?.email).toString()
+        return ((mappedIDs.length === 0) ? 'No students enrolled' : mappedIDs)
     }
 
     useEffect(() => {
@@ -126,7 +128,7 @@ const CoursePageTeacher: React.FC = () => {
     }
 
     return (
-        <Container style={{ marginTop: '1rem' }}>
+        <Container style={{ marginTop: '1rem', marginBottom: '1rem' }}>
             <Card>
                 <Card.Header>
                     <Card.Title>{course.name}</Card.Title>
@@ -165,12 +167,18 @@ const CoursePageTeacher: React.FC = () => {
                 }
             </CardGroup>}
             {loaded && !course.isCalculated && <Card>
-                <Card.Subtitle style={{ minWidth: '100%', marginTop: '1rem', fontSize: 18 }}>
+                <Card.Subtitle
+                    style={{
+                        minWidth: '100%',
+                        fontSize: 18,
+                        marginTop: '1rem',
+                        marginBottom: '1rem'
+                    }}>
                     Enrolled students
                 </Card.Subtitle>
             </Card>}
             {loaded && !course.isCalculated &&
-            <CardGroup>
+            <CardGroup style={{ marginTop: '1rem', marginBottom: '1rem' }}>
                 {course.students.map((student, index) => {
                     return (
                         <Card key={index} style={{ minWidth: '20%', flexGrow: 0 }}>
@@ -185,7 +193,13 @@ const CoursePageTeacher: React.FC = () => {
 
             {loaded && course.isCalculated &&
             <Card style={{ minWidth: '33%', flexGrow: 0 }}>
-                <Card.Text style={{ margin: 'auto', fontSize: 24 }}>
+                <Card.Text
+                    style={{
+                        minWidth: '100%',
+                        fontSize: 18,
+                        marginTop: '1rem',
+                        marginBottom: '1rem'
+                    }}>
                     Enrollment has finished
                 </Card.Text>
             </Card>}
@@ -193,20 +207,25 @@ const CoursePageTeacher: React.FC = () => {
                 return (
                     <Form.Group key={date.dateId}>
                         <CardGroup>
-                            <Card style={{ minWidth: '33%', flexGrow: 0 }}>
+                            <Card style={{ minWidth: '33%', flexGrow: 0, marginTop: '1rem' }}>
                                 <Card.Text style={{ margin: 'auto' }}>
-                                    {`${date.weekDay} ${date.startTime} - ${date.endTime}`}
+                                    {`${date.weekDay} ${date.startTime.toString().replaceAll(',', ':')}
+                                     - ${date.endTime.toString().replaceAll(',', ':')}`}
                                 </Card.Text>
                             </Card>
-                            {
-                                mapStudentIdToEmail(date.dateId)
-                            }
+                            <Card style={{ minWidth: '67%', flexGrow: 0, marginTop: '1rem' }}>
+                                <Card.Text>
+                                    {
+                                        mapStudentIdToEmail(date.dateId)
+                                    }
+                                </Card.Text>
+                            </Card>
                         </CardGroup>
                     </Form.Group>
                 )
             })}
-            <Button variant="danger" onClick={handleDeleteCourse}>Delete course</Button>
-            <Button variant="success" disabled={course.isCalculated}
+            <Button style={{ marginTop: '1rem' }} variant="danger" onClick={handleDeleteCourse}>Delete course</Button>
+            <Button style={{ marginTop: '1rem' }} variant="success" disabled={course.isCalculated}
                 onClick={handleCalculateCourse}>Calculate course</Button>
             <Alert show={showAlert} variant="danger">
                 {alertMess}

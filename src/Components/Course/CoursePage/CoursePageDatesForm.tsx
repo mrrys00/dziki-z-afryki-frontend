@@ -34,18 +34,6 @@ const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) =>
         setLoaded(true)
     }, [course])
 
-    // useEffect(() => {
-    //     axios.get(
-    //         `${PATH_COURSE_RESULTS}/${course?.courseId}`
-    //     ).then(resp => {
-    //         // const userId: string = jwtDecode(getToken())
-    //         const user: DecodedUser = jwtDecode<DecodedUser>(getToken())
-    //         const userEmail: string = user.email
-    //     }).catch(error => {
-    //         return error
-    //     })
-    // })
-
     const clearForm = (): void => {
         setComments(course!.dates.map((date) => ''))
         setSelected(course!.dates.map((date) => false))
@@ -103,7 +91,8 @@ const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) =>
                             <CardGroup>
                                 <Card style={{ minWidth: '33%', flexGrow: 0 }}>
                                     <Card.Text style={{ margin: 'auto' }}>
-                                        {`${date.weekDay} ${date.startTime} - ${date.endTime}`}
+                                        {`${date.weekDay} ${date.startTime.toString().replaceAll(',', ':')}
+                                         - ${date.endTime.toString().replaceAll(',', ':')}`}
                                     </Card.Text>
                                 </Card>
                                 <Card style={{ minWidth: '16%', flexGrow: 0 }}>
