@@ -2,19 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, InputGroup, Row, Container, Alert } from 'react-bootstrap'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
-
 import { useAuth } from '../../Auth/AuthProvider'
 import Home from '../Home/Home'
-
 import { type UserInputRegister } from '../../../Types/Types'
 import { PATH_AUTH_REGISTER } from '../../../Constants/Paths.d'
-
 import './Register.css'
 import { ROLE_STUDENT, ROLE_TEACHER } from '../../../Constants/Auth.d'
 import { ROUTE_HOME } from '../../../Constants/Routes.d'
 import { trueObject } from '../../../Utils/Utils'
 import { EMAIL_EXISTS, BASIC_ERROR } from '../../../Constants/Errors.d'
-
 import { emailValidator, passwordValidator, nameValidator } from '../../Validation/Validator'
 
 const RegisterPage = (): JSX.Element => {
@@ -99,9 +95,7 @@ const RegisterPage = (): JSX.Element => {
         const resp = await registerUser()
 
         if (resp.status === 200) {
-            auth.signin(resp.data.jwt, () => {
-                navigate(from, { replace: true })
-            })
+            auth.signin(resp.data.jwt, () => { navigate(from, { replace: true }) })
         } else if (resp.response.status === 409) {
             setShowAlert(true)
             setAlertMess(EMAIL_EXISTS)

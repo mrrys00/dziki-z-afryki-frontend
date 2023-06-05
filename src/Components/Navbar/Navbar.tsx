@@ -6,6 +6,7 @@ import { useAuth } from '../Auth/AuthProvider'
 import { ROLE_STUDENT, ROLE_TEACHER } from '../../Constants/Auth.d'
 import { ROUTE_AUTHENTICATION, ROUTE_COURSES, ROUTE_HOME, ROUTE_REGISTER }
     from '../../Constants/Routes.d'
+import axios from 'axios'
 
 const NavbarComponent: React.FC = (): JSX.Element => {
     const navigate = useNavigate()
@@ -32,7 +33,7 @@ const NavbarComponent: React.FC = (): JSX.Element => {
                             <Nav.Link onClick={() => {
                                 auth.signout(
                                     () => { navigate(ROUTE_AUTHENTICATION, { replace: true }) })
-                            } }>
+                            }}>
                                 Sign out
                             </Nav.Link>
                         </Nav>

@@ -60,9 +60,7 @@ const AuthenticationPage: React.FC = () => {
         const resp = await loginUser()
 
         if (resp.status === 200) {
-            auth.signin(resp.data.jwt, () => {
-                navigate(from, { replace: true })
-            })
+            auth.signin(resp.data.jwt, () => { navigate(from, { replace: true }) })
         } else {
             setShowAlert(true)
             console.log(resp)

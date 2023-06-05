@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { type Course } from '../../../Types/Types'
+import { DecodedUser, type Course } from '../../../Types/Types'
 import { Alert, Button, Card, CardGroup, Container, Form } from 'react-bootstrap'
 import axios from 'axios'
-import { PATH_COURSE_PREFERENCES } from '../../../Constants/Paths.d'
+import { PATH_COURSE_PREFERENCES, PATH_COURSE_RESULTS } from '../../../Constants/Paths.d'
 import { getToken } from '../../Auth/AuthProvider'
+import jwtDecode from 'jwt-decode'
+import { error } from 'console'
 
 const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) => {
     const [comments, setComments] = useState<string[]>([])
@@ -14,13 +16,8 @@ const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) =>
 
     useEffect(() => {
         axios.get(
-            `${PATH_COURSE_PREFERENCES}/all`,
-            {
-                headers:
-                    {
-                        Authorization: 'Bearer ' + getToken()
-                    }
-            }).then(resp => {
+            `${PATH_COURSE_PREFERENCES}/all`
+        ).then(resp => {
             const datesIds: string[] = []
             for (const coursePref of resp.data) {
                 if (coursePref.courseId === course?.courseId) {
@@ -50,12 +47,6 @@ const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) =>
             {
                 courseId: course!.courseId,
                 datesIds: dateIds
-            },
-            {
-                headers:
-                    {
-                        Authorization: `Bearer ${getToken()}`
-                    }
             }
         ).catch(error => {
             return error
@@ -100,7 +91,8 @@ const CoursePageDatesForm: React.FC<{ course: Course | null }> = ({ course }) =>
                             <CardGroup>
                                 <Card style={{ minWidth: '33%', flexGrow: 0 }}>
                                     <Card.Text style={{ margin: 'auto' }}>
-                                        {`${date.weekDay} ${date.startTime} - ${date.endTime}`}
+                                        {`${date.weekDay} ${date.startTime.toString().replaceAll(',', ':')}
+                                         - ${date.endTime.toString().replaceAll(',', ':')}`}
                                     </Card.Text>
                                 </Card>
                                 <Card style={{ minWidth: '16%', flexGrow: 0 }}>

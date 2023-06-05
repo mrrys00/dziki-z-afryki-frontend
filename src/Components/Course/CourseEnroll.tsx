@@ -26,14 +26,7 @@ const CourseEnroll: React.FC<{ setReloadCourse: React.Dispatch<React.SetStateAct
 
     const enroll = async (): Promise<any> => {
         return await axios.post(
-            `${PATH_COURSE_ENROLL}/${input}`,
-            {},
-            {
-                headers:
-                    {
-                        Authorization: `Bearer ${getToken()}`
-                    }
-            }
+            `${PATH_COURSE_ENROLL}/${input}`
         ).catch(error => {
             return error
         })

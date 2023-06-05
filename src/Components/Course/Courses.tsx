@@ -16,14 +16,7 @@ const Courses: React.FC = () => {
     const [reloadCourses, setReloadCourses] = useState<boolean>(false)
 
     useEffect(() => {
-        axios.get(
-            PATH_COURSE,
-            {
-                headers:
-                    {
-                        Authorization: 'Bearer ' + getToken()
-                    }
-            }).then(resp => {
+        axios.get(PATH_COURSE).then(resp => {
             setCourses(resp.data)
         }).catch(error => {
             return error
