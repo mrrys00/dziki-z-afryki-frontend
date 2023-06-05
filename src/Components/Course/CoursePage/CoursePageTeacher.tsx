@@ -60,7 +60,7 @@ const CoursePageTeacher: React.FC = () => {
     const handleCalculateCourse = async (): Promise<any> => {
         try {
             await calculateCourseRequest(course.courseId)
-            navigate(PATH_COURSE + '/' + course.courseId)
+            window.location.reload()
         } catch (e) {
             setShowAlert(true)
         }
